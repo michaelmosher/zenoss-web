@@ -1,7 +1,8 @@
 {
     "version": "0.1.0",
     "summary": "Zenoss Mobile-optimized web client",
-    "repository": "https://github.com/michaelmosher/zenossWeb.git",
+    "repository": "https://github.com/michaelmosher/zenoss-web.git",
+    "license": "BSD3",
     "source-directories": [
         "src"
     ],
