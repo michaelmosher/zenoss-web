@@ -1,5 +1,5 @@
 import Html exposing (Html, div, h2, p, span, input, button, text)
-import Html.Attributes exposing (type_)
+import Html.Attributes exposing (type_, style)
 import Html.Events exposing (onInput, onClick)
 import Http
 
@@ -19,6 +19,7 @@ main =
 type alias Model =
   {
     error: String,
+    loggedIn: Bool,
     zUsername: String,
     zPassword: String,
     zHostname: String,
@@ -27,7 +28,7 @@ type alias Model =
 
 init : (Model, Cmd Msg)
 init =
-  (Model "none" "" "" "" [], Cmd.none)
+  (Model "none" False "" "" "" [], Cmd.none)
 
 
 -- UPDATE
@@ -51,7 +52,7 @@ update msg model =
       ({model | zHostname = host}, Cmd.none)
 
     FetchEvents ->
-      (model, fetchEvents model)
+      ({model | loggedIn = True}, fetchEvents model)
 
     NewEvents (Ok e) ->
       ({ model | events = e }, Cmd.none)
@@ -80,19 +81,33 @@ subscriptions model =
 -- VIEW
 view : Model -> Html.Html Msg
 view model =
+  let
+      mainBody = if model.loggedIn
+      then Zenoss.Html.renderEventList model.events
+      else loginForm
+  in
+      
   div [] [
     h2 [] [text "Events"],
     p [] [text ("Errors: " ++ model.error)],
-
-    div []  [
-      span [] [text "Zenoss Hostname: "],
-      input [onInput UpdateHostname] [],
-      span [] [text "Username: "],
-      input [onInput UpdateUsername] [],
-      span [] [text "Password: "],
-      input [type_ "password", onInput UpdatePassword] [],
-      button [ onClick FetchEvents ] [ text "Fetch Events" ]
-    ],
-    Zenoss.Html.renderEventList model.events
+    mainBody
   ]
 
+
+loginForm: Html.Html Msg
+loginForm =
+  div [] [
+    div [style [("display", "flow")]] [
+      p [style [("flex-grow", "1")]] [text "Zenoss Hostname: "],
+      input [onInput UpdateHostname] []
+    ],
+    div [style [("display", "flow")]] [
+      p [style [("flex-grow", "1")]] [text "Zenoss Username: "],
+      input [onInput UpdateUsername] []
+    ],
+    div [style [("display", "flow")]] [
+      p [style [("flex-grow", "1")]] [text "Zenoss Password: "],
+      input [onInput UpdatePassword] []
+    ],
+    button [ onClick FetchEvents ] [ text "Fetch Events" ]
+  ]
