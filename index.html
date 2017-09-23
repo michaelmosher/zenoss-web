@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta charset="UTF-8" />
         <meta name="theme-color" content="#001f3f" />
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="./manifest.json" />
         <script>
             if('serviceWorker' in navigator) {
                 navigator.serviceWorker
@@ -19,7 +19,7 @@
             <h1>Loading...</h1>
             <p>Unless you have javascript disabled, in which case, it's just failing.</p>
         </div>
-        <script src="main.js"></script>
+        <script src="./main.js"></script>
         <script>
             var node = document.getElementById('main');
             var app = Elm.Main.embed(node);
