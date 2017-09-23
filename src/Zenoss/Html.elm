@@ -5,9 +5,9 @@ import Html exposing (Html, div, span, p, text)
 import Html.Attributes exposing (style)
 import Svg
 import Svg.Attributes exposing (points, fill, cx, cy, r)
-import Zenoss
+import Main.Model exposing (Event, EventState(..))
 
-renderEventList: List Zenoss.Event -> Html a
+renderEventList: List Event -> Html a
 renderEventList events =
   let
     listCss = style []
@@ -15,12 +15,12 @@ renderEventList events =
     div [listCss] (List.map renderEvent events)
 
 
-renderEvent: Zenoss.Event -> Html a
+renderEvent: Event -> Html a
 renderEvent event =
   let
     bgColor = case event.eventState of
-      Zenoss.New -> "white"
-      Zenoss.Acknowledged -> "lightgrey"
+      New -> "white"
+      Acknowledged -> "lightgrey"
 
     mainCss = style [
       ("position", "relative"),
@@ -108,7 +108,7 @@ renderEventOwner owner =
     span [] [text ownerString]
 
 
-renderEventState: Zenoss.EventState -> Html a
+renderEventState: EventState -> Html a
 renderEventState s =
   let
     staticStyles = [
@@ -117,19 +117,19 @@ renderEventState s =
     ]
 
     dynamicStyles = case s of
-      Zenoss.New -> [("font-size", "3em"), ("color", "inherit")]
-      Zenoss.Acknowledged -> [("font-size", "1.5em"), ("color", "green")]
+      New -> [("font-size", "3em"), ("color", "inherit")]
+      Acknowledged -> [("font-size", "1.5em"), ("color", "green")]
 
     css = List.concat [staticStyles, dynamicStyles] |> style
   in
     div [css] [s |> eventStateString |> text]
 
 
-eventStateString: Zenoss.EventState -> String
+eventStateString: EventState -> String
 eventStateString e =
   case e of
-    Zenoss.New -> String.fromChar (Char.fromCode 9675) -- ○
-    Zenoss.Acknowledged -> String.fromChar (Char.fromCode 10003) -- ✓
+    New -> String.fromChar (Char.fromCode 9675) -- ○
+    Acknowledged -> String.fromChar (Char.fromCode 10003) -- ✓
 
 
 severityShape: String -> Svg.Svg a
