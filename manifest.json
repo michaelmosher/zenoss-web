@@ -1,0 +1,30 @@
+{
+    "short_name": "Zenoss",
+    "name": "Zenoss PWA",
+    "icons": [
+      {
+        "src": "launcher-icon-1x.png",
+        "type": "image/png",
+        "sizes": "48x48"
+      },
+      {
+        "src": "launcher-icon-2x.png",
+        "type": "image/png",
+        "sizes": "96x96"
+      },
+      {
+        "src": "launcher-icon-4x.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "splash.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ],
+    "start_url": "index.html",
+    "theme_color": "#001f3f",
+    "background_color": "#001f3f",
+    "display": "standalone"
+  }

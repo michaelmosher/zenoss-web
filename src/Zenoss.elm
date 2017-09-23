@@ -1,22 +1,11 @@
-module Zenoss exposing (Auth, Event, EventState(..), eventsRequest)
+module Zenoss exposing (eventsRequest)
 
+import Base64
 import Http
 import Json.Decode as Decode
 import Json.Encode as Json
-import Base64
 
-type EventState = New | Acknowledged
-
-type alias Event = {
-  id: String,
-  deviceName: String,
-  summary: String,
-  prodState: String,
-  severity: String,
-  eventState: EventState,
-  owner: Maybe String,
-  count: Int
-}
+import Main.Model exposing (Event, EventState(..))
 
 type alias Auth = {
   hostname: String,
