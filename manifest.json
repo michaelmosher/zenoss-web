@@ -3,22 +3,22 @@
     "name": "Zenoss PWA",
     "icons": [
       {
-        "src": "launcher-icon-1x.png",
+        "src": "./public/launcher-small.png",
         "type": "image/png",
         "sizes": "48x48"
       },
       {
-        "src": "launcher-icon-2x.png",
+        "src": "./public/launcher-medium.png",
         "type": "image/png",
         "sizes": "96x96"
       },
       {
-        "src": "launcher-icon-4x.png",
+        "src": "./public/launcher-large.png",
         "type": "image/png",
         "sizes": "192x192"
       },
       {
-        "src": "splash.png",
+        "src": "./public/splash.png",
         "type": "image/png",
         "sizes": "512x512"
       }
