@@ -10388,10 +10388,16 @@ var _michaelmosher$zenoss_web$Main_Model$Model = F5(
 	function (a, b, c, d, e) {
 		return {currentPage: a, hostname: b, username: c, password: d, events: e};
 	});
-var _michaelmosher$zenoss_web$Main_Model$Events = {ctor: 'Events'};
+var _michaelmosher$zenoss_web$Main_Model$EventPage = function (a) {
+	return {ctor: 'EventPage', _0: a};
+};
+var _michaelmosher$zenoss_web$Main_Model$EventsPage = {ctor: 'EventsPage'};
 var _michaelmosher$zenoss_web$Main_Model$LoginPage = {ctor: 'LoginPage'};
 var _michaelmosher$zenoss_web$Main_Model$Acknowledged = {ctor: 'Acknowledged'};
 var _michaelmosher$zenoss_web$Main_Model$New = {ctor: 'New'};
+var _michaelmosher$zenoss_web$Main_Model$EventDetails = function (a) {
+	return {ctor: 'EventDetails', _0: a};
+};
 var _michaelmosher$zenoss_web$Main_Model$NewEvents = function (a) {
 	return {ctor: 'NewEvents', _0: a};
 };
@@ -11691,24 +11697,20 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEvent = function (event) {
 				_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'border', _1: 'solid 5px black'},
+					_0: {ctor: '_Tuple2', _0: 'border-bottom', _1: 'solid 1px black'},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '20px'},
+						_0: {ctor: '_Tuple2', _0: 'margin', _1: '0'},
 						_1: {
 							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'margin', _1: '5px'},
+							_0: {ctor: '_Tuple2', _0: 'padding', _1: '5px'},
 							_1: {
 								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'padding', _1: '5px'},
+								_0: {ctor: '_Tuple2', _0: 'align-items', _1: 'center'},
 								_1: {
 									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'align-items', _1: 'center'},
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'background-color', _1: bgColor},
-										_1: {ctor: '[]'}
-									}
+									_0: {ctor: '_Tuple2', _0: 'background-color', _1: bgColor},
+									_1: {ctor: '[]'}
 								}
 							}
 						}
@@ -11720,8 +11722,17 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEvent = function (event) {
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: mainCss,
-			_1: {ctor: '[]'}
+			_0: _elm_lang$html$Html_Attributes$class('simple-event'),
+			_1: {
+				ctor: '::',
+				_0: mainCss,
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(
+						_michaelmosher$zenoss_web$Main_Model$EventDetails(event.id)),
+					_1: {ctor: '[]'}
+				}
+			}
 		},
 		{
 			ctor: '::',
@@ -11801,9 +11812,40 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEvent = function (event) {
 			}
 		});
 };
+var _michaelmosher$zenoss_web$Zenoss_Html$renderEventDetails = F2(
+	function (events, eid) {
+		var event = _elm_lang$core$List$head(
+			A2(
+				_elm_lang$core$List$filter,
+				function (e) {
+					return _elm_lang$core$Native_Utils.eq(e.id, eid);
+				},
+				events));
+		var _p5 = event;
+		if (_p5.ctor === 'Nothing') {
+			return A2(
+				_elm_lang$html$Html$p,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Error!'),
+					_1: {ctor: '[]'}
+				});
+		} else {
+			return _michaelmosher$zenoss_web$Zenoss_Html$renderEvent(_p5._0);
+		}
+	});
 var _michaelmosher$zenoss_web$Zenoss_Html$renderEventList = function (events) {
 	var listCss = _elm_lang$html$Html_Attributes$style(
-		{ctor: '[]'});
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'border', _1: 'solid 5px black'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '20px'},
+				_1: {ctor: '[]'}
+			}
+		});
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -11817,28 +11859,49 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEventList = function (events) {
 var _michaelmosher$zenoss_web$Main$view = function (model) {
 	var _p0 = model.currentPage;
 	if (_p0.ctor === 'Just') {
-		if (_p0._0.ctor === 'LoginPage') {
-			return _michaelmosher$zenoss_web$Login$pageView(model);
-		} else {
-			return A2(
-				_elm_lang$html$Html$div,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$h2,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Events!'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
+		switch (_p0._0.ctor) {
+			case 'LoginPage':
+				return _michaelmosher$zenoss_web$Login$pageView(model);
+			case 'EventsPage':
+				return A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					{
 						ctor: '::',
-						_0: _michaelmosher$zenoss_web$Zenoss_Html$renderEventList(model.events),
-						_1: {ctor: '[]'}
-					}
-				});
+						_0: A2(
+							_elm_lang$html$Html$h2,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Events!'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: _michaelmosher$zenoss_web$Zenoss_Html$renderEventList(model.events),
+							_1: {ctor: '[]'}
+						}
+					});
+			default:
+				return A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$h2,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('One Event!'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$renderEventDetails, model.events, _p0._0._0),
+							_1: {ctor: '[]'}
+						}
+					});
 		}
 	} else {
 		return A2(
@@ -11859,9 +11922,19 @@ var _michaelmosher$zenoss_web$Main$route = _evancz$url_parser$UrlParser$oneOf(
 			ctor: '::',
 			_0: A2(
 				_evancz$url_parser$UrlParser$map,
-				_michaelmosher$zenoss_web$Main_Model$Events,
+				_michaelmosher$zenoss_web$Main_Model$EventsPage,
 				_evancz$url_parser$UrlParser$s('Events')),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_evancz$url_parser$UrlParser$map,
+					_michaelmosher$zenoss_web$Main_Model$EventPage,
+					A2(
+						_evancz$url_parser$UrlParser_ops['</>'],
+						_evancz$url_parser$UrlParser$s('Event'),
+						_evancz$url_parser$UrlParser$string)),
+				_1: {ctor: '[]'}
+			}
 		}
 	});
 var _michaelmosher$zenoss_web$Main$update = F2(
@@ -11957,7 +12030,7 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 						_michaelmosher$zenoss_web$Main_Model$NewEvents,
 						_michaelmosher$zenoss_web$Zenoss$eventsRequest(auth))
 				};
-			default:
+			case 'NewEvents':
 				if (_p1._0.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
@@ -11994,6 +12067,13 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				}
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: _elm_lang$navigation$Navigation$newUrl(
+						A2(_elm_lang$core$Basics_ops['++'], '#Event/', _p1._0))
+				};
 		}
 	});
 var _michaelmosher$zenoss_web$Main$subscriptions = function (_p2) {

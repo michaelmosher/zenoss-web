@@ -1,21 +1,34 @@
-module Zenoss.Html exposing (renderEventList)
+module Zenoss.Html exposing (renderEventList, renderEventDetails)
 
 import Char
 import Html exposing (Html, div, span, p, text)
-import Html.Attributes exposing (style)
+import Html.Attributes exposing (class, style)
+import Html.Events exposing (onClick)
 import Svg
 import Svg.Attributes exposing (points, fill, cx, cy, r)
-import Main.Model exposing (Event, EventState(..))
+import Main.Model exposing (Event, EventState(..), Msg(..))
 
-renderEventList: List Event -> Html a
+renderEventList: List Event -> Html Msg
 renderEventList events =
-  let
-    listCss = style []
-  in
-    div [listCss] (List.map renderEvent events)
+    let
+        listCss = style [
+            ("border", "solid 5px black"),
+            ("border-radius", "20px")
+        ]
+    in
+        div [listCss] (List.map renderEvent events)
 
 
-renderEvent: Event -> Html a
+renderEventDetails: List Event -> String -> Html Msg
+renderEventDetails events eid =
+    let
+        event = List.filter (\e -> e.id == eid) events |> List.head
+    in
+        case event of
+            Nothing -> p [] [text "Error!"]
+            Just e -> renderEvent e
+
+renderEvent: Event -> Html Msg
 renderEvent event =
   let
     bgColor = case event.eventState of
@@ -25,15 +38,14 @@ renderEvent event =
     mainCss = style [
       ("position", "relative"),
       ("display", "flex"),
-      ("border", "solid 5px black"),
-      ("border-radius", "20px"),
-      ("margin", "5px"),
+      ("border-bottom", "solid 1px black"),
+      ("margin", "0"),
       ("padding", "5px"),
       ("align-items", "center"),
       ("background-color", bgColor)
     ]
   in
-    div [mainCss] [
+    div [class "simple-event", mainCss, (onClick (EventDetails event.id))] [
       event.severity |> renderEventSeverity,
       div [style [("flex-grow", "1")]] [
         div [style [("display", "flex")]] [

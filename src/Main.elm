@@ -1,7 +1,7 @@
 import Html exposing (Html, div, h2, p, text)
 import Http
 import Navigation
-import UrlParser as Url
+import UrlParser as Url exposing ((</>))
 
 import LocalSettings
 import Login
@@ -35,7 +35,8 @@ route: Url.Parser (Page -> a) a
 route =
   Url.oneOf [
     Url.map LoginPage Url.top,
-    Url.map Events (Url.s "Events")
+    Url.map EventsPage (Url.s "Events"),
+    Url.map EventPage (Url.s "Event" </> Url.string)
   ]
 
 
@@ -89,6 +90,9 @@ update msg model =
       in
         ({model | events = [loginFailed]}, Cmd.none)
 
+    EventDetails eid ->
+        (model, "#Event/" ++ eid |> Navigation.newUrl)
+
 
 view: Model -> Html Msg
 view model =
@@ -96,10 +100,16 @@ view model =
     Just LoginPage -> 
       Login.pageView model
 
-    Just Events -> 
+    Just EventsPage -> 
         div [] [
             h2 [] [text "Events!"],
             Zenoss.Html.renderEventList model.events
+        ]
+    
+    Just (EventPage eid) ->
+        div [] [
+            h2 [] [text "One Event!"],
+            Zenoss.Html.renderEventDetails model.events eid
         ]
     
     Nothing ->

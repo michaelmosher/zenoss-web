@@ -8,7 +8,7 @@ type alias Setting = {
     value: Maybe String
 }
 
-type Page = LoginPage | Events
+type Page = LoginPage | EventsPage | EventPage String
 
 type EventState = New | Acknowledged
 
@@ -40,3 +40,4 @@ type Msg =
   | LoginMsg
   | FetchEvents
   | NewEvents (Result Http.Error (List Event))
+  | EventDetails String
