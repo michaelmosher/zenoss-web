@@ -20,7 +20,11 @@ type alias Event = {
   severity: String,
   eventState: EventState,
   owner: Maybe String,
-  count: Int
+  count: Int,
+  firstTime: String,
+  lastTime: String,
+  component: Maybe String,
+  stdErr: String
 }
 
 type alias Model = {

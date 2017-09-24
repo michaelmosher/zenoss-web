@@ -3,6 +3,7 @@ module Zenoss exposing (eventsRequest)
 import Base64
 import Http
 import Json.Decode as Decode
+import Json.Decode.Pipeline exposing (decode, optionalAt, required, requiredAt)
 import Json.Encode as Json
 
 import Main.Model exposing (Event, EventState(..))
@@ -68,16 +69,19 @@ decodeEventsResponse =
 
 eventDecoder: Decode.Decoder Event
 eventDecoder =
-  Decode.map8 Event (Decode.field "id" Decode.string)
-                    (Decode.field "device"
-                      (Decode.field "text" Decode.string)
-                    )
-                    (Decode.field "summary" Decode.string)
-                    (Decode.field "prodState" Decode.string)
-                    (Decode.field "severity" severityDecoder)
-                    (Decode.field "eventState" eventStateDecoder)
-                    (Decode.field "ownerid" (Decode.maybe Decode.string))
-                    (Decode.field "count" Decode.int)
+    decode Event
+        |> required "id" Decode.string
+        |> requiredAt ["device", "text"] Decode.string
+        |> required "summary" Decode.string
+        |> required "prodState" Decode.string
+        |> required "severity"severityDecoder
+        |> required "eventState" eventStateDecoder
+        |> required "ownerid" (Decode.maybe Decode.string)
+        |> required "count" Decode.int
+        |> required "firstTime" Decode.string
+        |> required "lastTime" Decode.string
+        |> requiredAt ["component", "text"] (Decode.nullable Decode.string)
+        |> optionalAt ["details", "stderr"] stderrDecoder "N/A"
 
 
 severityDecoder: Decode.Decoder String
@@ -100,3 +104,11 @@ eventStateDecoder =
       "Acknowledged" -> Decode.succeed Acknowledged
       somethingElse -> Decode.fail <| "Uknown EventState: " ++ somethingElse
   )
+
+
+stderrDecoder: Decode.Decoder String
+stderrDecoder =
+    Decode.list Decode.string |> Decode.andThen (\l ->
+        Decode.succeed (List.foldr (++) "" l)
+    )
+

@@ -87,6 +87,7 @@ update msg model =
         loginFailed = Main.Model.Event "" "zenoss-web"
                             ("Failed to connect to Zenoss server: " ++ toString e)
                             "Production" "Critical" Main.Model.New Nothing 1
+                            "null" "null" Nothing "N/A"
       in
         ({model | events = [loginFailed]}, Cmd.none)
 

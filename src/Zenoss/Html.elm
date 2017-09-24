@@ -16,7 +16,7 @@ renderEventList events =
             ("border-radius", "20px")
         ]
     in
-        div [listCss] (List.map renderEvent events)
+        div [listCss] (List.map renderSimpleEvent events)
 
 
 renderEventDetails: List Event -> String -> Html Msg
@@ -26,10 +26,10 @@ renderEventDetails events eid =
     in
         case event of
             Nothing -> p [] [text "Error!"]
-            Just e -> renderEvent e
+            Just e -> renderDetailedEvent e
 
-renderEvent: Event -> Html Msg
-renderEvent event =
+renderSimpleEvent: Event -> Html Msg
+renderSimpleEvent event =
   let
     bgColor = case event.eventState of
       New -> "white"
@@ -61,6 +61,31 @@ renderEvent event =
       event.eventState |> renderEventState
     ]
 
+
+renderDetailedEvent: Event -> Html Msg
+renderDetailedEvent event =
+    let
+        component = case event.component of
+            Just c -> c
+            Nothing -> "null"
+        
+        ownerString = case event.owner of
+            Nothing -> "Not ack'd"
+            Just o -> "Ack'd by " ++ o
+    in
+        
+    div [class "detailed-event"] [
+        eventDetailField "device" event.deviceName,
+        eventDetailField "component" component,
+        eventDetailField "summary" event.summary,
+        eventDetailField "prod state" event.prodState,
+        eventDetailField "severity" event.severity,
+        eventDetailField "owner" ownerString,
+        eventDetailField "first occurance" event.firstTime,
+        eventDetailField "latest occurance" event.lastTime,
+        eventDetailField "error output" event.stdErr
+    ]
+        
 
 renderEventSeverity: String -> Html a
 renderEventSeverity s =
@@ -151,4 +176,12 @@ severityShape s =
     "Error" -> Svg.polygon [fill "orange", points "5,5 15,25 25,5"] []
     "Warning" -> Svg.polygon [fill "yellow", points "15,5 5,25 25,25"] []
     _ -> Svg.circle [fill "blue", cx "15", cy "15", r "10"] []
+
+
+eventDetailField: String -> String -> Html a
+eventDetailField key value =
+    div [style [("display", "flex")]] [
+      span [style [("border-bottom", "lightgrey solid 1px"), ("font-weight", "bolder"), ("flex-grow", "1")]] [text key],
+      span [style [("border-bottom", "lightgrey solid 1px")]] [text value]
+    ]
 
