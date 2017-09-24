@@ -10495,8 +10495,8 @@ var _michaelmosher$zenoss_web$LocalSettings$newSetting = _elm_lang$core$Native_P
 		},
 		A2(_elm_lang$core$Json_Decode$field, 'key', _elm_lang$core$Json_Decode$string)));
 
-var _michaelmosher$zenoss_web$Login$loginField = F3(
-	function (label, inputMsg, attrs) {
+var _michaelmosher$zenoss_web$Login$loginField = F2(
+	function (attrs, inputMsg) {
 		var css = _elm_lang$html$Html_Attributes$style(
 			{
 				ctor: '::',
@@ -10519,12 +10519,8 @@ var _michaelmosher$zenoss_web$Login$loginField = F3(
 				_0: css,
 				_1: {
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$placeholder(label),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onInput(inputMsg),
-						_1: {ctor: '[]'}
-					}
+					_0: _elm_lang$html$Html_Events$onInput(inputMsg),
+					_1: {ctor: '[]'}
 				}
 			});
 		return A2(
@@ -10532,6 +10528,64 @@ var _michaelmosher$zenoss_web$Login$loginField = F3(
 			inputAttrs,
 			{ctor: '[]'});
 	});
+var _michaelmosher$zenoss_web$Login$passwordLoginField = function (password) {
+	var defaultValue = function () {
+		var _p0 = password;
+		if (_p0 === '') {
+			return _elm_lang$html$Html_Attributes$placeholder('Zenoss Password');
+		} else {
+			return _elm_lang$html$Html_Attributes$value(password);
+		}
+	}();
+	return A2(
+		_michaelmosher$zenoss_web$Login$loginField,
+		{
+			ctor: '::',
+			_0: defaultValue,
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$type_('password'),
+				_1: {ctor: '[]'}
+			}
+		},
+		_michaelmosher$zenoss_web$Main_Model$UpdatePassword);
+};
+var _michaelmosher$zenoss_web$Login$usernameLoginField = function (username) {
+	var defaultValue = function () {
+		var _p1 = username;
+		if (_p1 === '') {
+			return _elm_lang$html$Html_Attributes$placeholder('Zenoss Username');
+		} else {
+			return _elm_lang$html$Html_Attributes$value(username);
+		}
+	}();
+	return A2(
+		_michaelmosher$zenoss_web$Login$loginField,
+		{
+			ctor: '::',
+			_0: defaultValue,
+			_1: {ctor: '[]'}
+		},
+		_michaelmosher$zenoss_web$Main_Model$UpdateUsername);
+};
+var _michaelmosher$zenoss_web$Login$hostnameLoginField = function (hostname) {
+	var defaultValue = function () {
+		var _p2 = hostname;
+		if (_p2 === '') {
+			return _elm_lang$html$Html_Attributes$placeholder('Zenoss Hostname');
+		} else {
+			return _elm_lang$html$Html_Attributes$value(hostname);
+		}
+	}();
+	return A2(
+		_michaelmosher$zenoss_web$Login$loginField,
+		{
+			ctor: '::',
+			_0: defaultValue,
+			_1: {ctor: '[]'}
+		},
+		_michaelmosher$zenoss_web$Main_Model$UpdateHostname);
+};
 var _michaelmosher$zenoss_web$Login$pageView = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -10587,45 +10641,13 @@ var _michaelmosher$zenoss_web$Login$pageView = function (model) {
 					},
 					{
 						ctor: '::',
-						_0: A3(
-							_michaelmosher$zenoss_web$Login$loginField,
-							'Zenoss Hostname',
-							_michaelmosher$zenoss_web$Main_Model$UpdateHostname,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$autofocus(true),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$value(model.hostname),
-									_1: {ctor: '[]'}
-								}
-							}),
+						_0: _michaelmosher$zenoss_web$Login$hostnameLoginField(model.hostname),
 						_1: {
 							ctor: '::',
-							_0: A3(
-								_michaelmosher$zenoss_web$Login$loginField,
-								'Zenoss Username',
-								_michaelmosher$zenoss_web$Main_Model$UpdateUsername,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$value(model.username),
-									_1: {ctor: '[]'}
-								}),
+							_0: _michaelmosher$zenoss_web$Login$usernameLoginField(model.username),
 							_1: {
 								ctor: '::',
-								_0: A3(
-									_michaelmosher$zenoss_web$Login$loginField,
-									'Zenoss Password',
-									_michaelmosher$zenoss_web$Main_Model$UpdatePassword,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$type_('password'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$value(model.password),
-											_1: {ctor: '[]'}
-										}
-									}),
+								_0: _michaelmosher$zenoss_web$Login$passwordLoginField(model.password),
 								_1: {
 									ctor: '::',
 									_0: A2(
