@@ -10376,6 +10376,10 @@ var _evancz$url_parser$UrlParser$intParam = function (name) {
 	return A2(_evancz$url_parser$UrlParser$customParam, name, _evancz$url_parser$UrlParser$intParamHelp);
 };
 
+var _michaelmosher$zenoss_web$Main_Model$Setting = F2(
+	function (a, b) {
+		return {key: a, value: b};
+	});
 var _michaelmosher$zenoss_web$Main_Model$Event = F8(
 	function (a, b, c, d, e, f, g, h) {
 		return {id: a, deviceName: b, summary: c, prodState: d, severity: e, eventState: f, owner: g, count: h};
@@ -10402,9 +10406,94 @@ var _michaelmosher$zenoss_web$Main_Model$UpdateUsername = function (a) {
 var _michaelmosher$zenoss_web$Main_Model$UpdateHostname = function (a) {
 	return {ctor: 'UpdateHostname', _0: a};
 };
+var _michaelmosher$zenoss_web$Main_Model$NewSetting = function (a) {
+	return {ctor: 'NewSetting', _0: a};
+};
 var _michaelmosher$zenoss_web$Main_Model$UrlChange = function (a) {
 	return {ctor: 'UrlChange', _0: a};
 };
+
+var _michaelmosher$zenoss_web$LocalSettings$storeSetting = F2(
+	function (s, model) {
+		var value = function () {
+			var _p0 = s.value;
+			if (_p0.ctor === 'Just') {
+				return _p0._0;
+			} else {
+				return '';
+			}
+		}();
+		var _p1 = s.key;
+		switch (_p1) {
+			case 'Zhostname':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{hostname: value});
+			case 'Zusername':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{username: value});
+			case 'Zpassword':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{password: value});
+			default:
+				return model;
+		}
+	});
+var _michaelmosher$zenoss_web$LocalSettings$setSetting = _elm_lang$core$Native_Platform.outgoingPort(
+	'setSetting',
+	function (v) {
+		return {
+			key: v.key,
+			value: (v.value.ctor === 'Nothing') ? null : v.value._0
+		};
+	});
+var _michaelmosher$zenoss_web$LocalSettings$getSetting = _elm_lang$core$Native_Platform.outgoingPort(
+	'getSetting',
+	function (v) {
+		return v;
+	});
+var _michaelmosher$zenoss_web$LocalSettings$loadInitialSettings = _elm_lang$core$Platform_Cmd$batch(
+	{
+		ctor: '::',
+		_0: _michaelmosher$zenoss_web$LocalSettings$getSetting('Zhostname'),
+		_1: {
+			ctor: '::',
+			_0: _michaelmosher$zenoss_web$LocalSettings$getSetting('Zusername'),
+			_1: {
+				ctor: '::',
+				_0: _michaelmosher$zenoss_web$LocalSettings$getSetting('Zpassword'),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
+var _michaelmosher$zenoss_web$LocalSettings$newSetting = _elm_lang$core$Native_Platform.incomingPort(
+	'newSetting',
+	A2(
+		_elm_lang$core$Json_Decode$andThen,
+		function (key) {
+			return A2(
+				_elm_lang$core$Json_Decode$andThen,
+				function (value) {
+					return _elm_lang$core$Json_Decode$succeed(
+						{key: key, value: value});
+				},
+				A2(
+					_elm_lang$core$Json_Decode$field,
+					'value',
+					_elm_lang$core$Json_Decode$oneOf(
+						{
+							ctor: '::',
+							_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
+							_1: {
+								ctor: '::',
+								_0: A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Maybe$Just, _elm_lang$core$Json_Decode$string),
+								_1: {ctor: '[]'}
+							}
+						})));
+		},
+		A2(_elm_lang$core$Json_Decode$field, 'key', _elm_lang$core$Json_Decode$string)));
 
 var _michaelmosher$zenoss_web$Login$loginField = F3(
 	function (label, inputMsg, attrs) {
@@ -10443,118 +10532,132 @@ var _michaelmosher$zenoss_web$Login$loginField = F3(
 			inputAttrs,
 			{ctor: '[]'});
 	});
-var _michaelmosher$zenoss_web$Login$pageView = A2(
-	_elm_lang$html$Html$div,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$style(
-			{
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
-				_1: {
+var _michaelmosher$zenoss_web$Login$pageView = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'width', _1: '100%'},
-					_1: {ctor: '[]'}
-				}
-			}),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$h1,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('Login'),
-				_1: {ctor: '[]'}
-			}),
-		_1: {
+					_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'width', _1: '100%'},
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		},
+		{
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$div,
+				_elm_lang$html$Html$h1,
+				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$style(
-						{
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'width', _1: '75%'},
-							_1: {
+					_0: _elm_lang$html$Html$text('Login'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$style(
+							{
 								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
+								_0: {ctor: '_Tuple2', _0: 'width', _1: '75%'},
 								_1: {
 									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'flex-direction', _1: 'column'},
+									_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
 									_1: {
 										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'margin', _1: 'auto'},
-										_1: {ctor: '[]'}
+										_0: {ctor: '_Tuple2', _0: 'flex-direction', _1: 'column'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'margin', _1: 'auto'},
+											_1: {ctor: '[]'}
+										}
 									}
 								}
-							}
-						}),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A3(
-						_michaelmosher$zenoss_web$Login$loginField,
-						'Zenoss Hostname',
-						_michaelmosher$zenoss_web$Main_Model$UpdateHostname,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$autofocus(true),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
+							}),
+						_1: {ctor: '[]'}
+					},
+					{
 						ctor: '::',
 						_0: A3(
 							_michaelmosher$zenoss_web$Login$loginField,
-							'Zenoss Username',
-							_michaelmosher$zenoss_web$Main_Model$UpdateUsername,
-							{ctor: '[]'}),
+							'Zenoss Hostname',
+							_michaelmosher$zenoss_web$Main_Model$UpdateHostname,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$autofocus(true),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$value(model.hostname),
+									_1: {ctor: '[]'}
+								}
+							}),
 						_1: {
 							ctor: '::',
 							_0: A3(
 								_michaelmosher$zenoss_web$Login$loginField,
-								'Zenoss Password',
-								_michaelmosher$zenoss_web$Main_Model$UpdatePassword,
+								'Zenoss Username',
+								_michaelmosher$zenoss_web$Main_Model$UpdateUsername,
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$type_('password'),
+									_0: _elm_lang$html$Html_Attributes$value(model.username),
 									_1: {ctor: '[]'}
 								}),
 							_1: {
 								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$button,
+								_0: A3(
+									_michaelmosher$zenoss_web$Login$loginField,
+									'Zenoss Password',
+									_michaelmosher$zenoss_web$Main_Model$UpdatePassword,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$style(
-											{
-												ctor: '::',
-												_0: {ctor: '_Tuple2', _0: 'font-size', _1: 'x-large'},
-												_1: {ctor: '[]'}
-											}),
+										_0: _elm_lang$html$Html_Attributes$type_('password'),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$html$Html_Events$onClick(_michaelmosher$zenoss_web$Main_Model$LoginMsg),
+											_0: _elm_lang$html$Html_Attributes$value(model.password),
 											_1: {ctor: '[]'}
 										}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('Fetch Events'),
-										_1: {ctor: '[]'}
 									}),
-								_1: {ctor: '[]'}
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$button,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$style(
+												{
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 'font-size', _1: 'x-large'},
+													_1: {ctor: '[]'}
+												}),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onClick(_michaelmosher$zenoss_web$Main_Model$LoginMsg),
+												_1: {ctor: '[]'}
+											}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('Fetch Events'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
 							}
 						}
-					}
-				}),
-			_1: {ctor: '[]'}
-		}
-	});
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 
 var _truqu$elm_base64$Base64_Decode$charToInt = function ($char) {
 	var _p0 = $char;
@@ -11693,7 +11796,7 @@ var _michaelmosher$zenoss_web$Main$view = function (model) {
 	var _p0 = model.currentPage;
 	if (_p0.ctor === 'Just') {
 		if (_p0._0.ctor === 'LoginPage') {
-			return _michaelmosher$zenoss_web$Login$pageView;
+			return _michaelmosher$zenoss_web$Login$pageView(model);
 		} else {
 			return A2(
 				_elm_lang$html$Html$div,
@@ -11753,6 +11856,12 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			case 'NewSetting':
+				return {
+					ctor: '_Tuple2',
+					_0: A2(_michaelmosher$zenoss_web$LocalSettings$storeSetting, _p1._0, model),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			case 'UpdateHostname':
 				return {
 					ctor: '_Tuple2',
@@ -11789,7 +11898,31 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 						_1: {
 							ctor: '::',
 							_0: _elm_lang$navigation$Navigation$newUrl('#Events'),
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: _michaelmosher$zenoss_web$LocalSettings$setSetting(
+									{
+										key: 'Zhostname',
+										value: _elm_lang$core$Maybe$Just(model.hostname)
+									}),
+								_1: {
+									ctor: '::',
+									_0: _michaelmosher$zenoss_web$LocalSettings$setSetting(
+										{
+											key: 'Zusername',
+											value: _elm_lang$core$Maybe$Just(model.username)
+										}),
+									_1: {
+										ctor: '::',
+										_0: _michaelmosher$zenoss_web$LocalSettings$setSetting(
+											{
+												key: 'Zpassword',
+												value: _elm_lang$core$Maybe$Just(model.password)
+											}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
 						}
 					});
 			case 'FetchEvents':
@@ -11841,7 +11974,10 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 				}
 		}
 	});
-var _michaelmosher$zenoss_web$Main$init = function (_p2) {
+var _michaelmosher$zenoss_web$Main$subscriptions = function (_p2) {
+	return _michaelmosher$zenoss_web$LocalSettings$newSetting(_michaelmosher$zenoss_web$Main_Model$NewSetting);
+};
+var _michaelmosher$zenoss_web$Main$init = function (_p3) {
 	return {
 		ctor: '_Tuple2',
 		_0: A5(
@@ -11851,20 +11987,13 @@ var _michaelmosher$zenoss_web$Main$init = function (_p2) {
 			'',
 			'',
 			{ctor: '[]'}),
-		_1: _elm_lang$core$Platform_Cmd$none
+		_1: _michaelmosher$zenoss_web$LocalSettings$loadInitialSettings
 	};
 };
 var _michaelmosher$zenoss_web$Main$main = A2(
 	_elm_lang$navigation$Navigation$program,
 	_michaelmosher$zenoss_web$Main_Model$UrlChange,
-	{
-		init: _michaelmosher$zenoss_web$Main$init,
-		view: _michaelmosher$zenoss_web$Main$view,
-		update: _michaelmosher$zenoss_web$Main$update,
-		subscriptions: function (_p3) {
-			return _elm_lang$core$Platform_Sub$none;
-		}
-	})();
+	{init: _michaelmosher$zenoss_web$Main$init, view: _michaelmosher$zenoss_web$Main$view, update: _michaelmosher$zenoss_web$Main$update, subscriptions: _michaelmosher$zenoss_web$Main$subscriptions})();
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};

@@ -23,6 +23,15 @@
         <script>
             var node = document.getElementById('main');
             var app = Elm.Main.embed(node);
+
+            app.ports.setSetting.subscribe(function(setting) {
+                localStorage.setItem(setting.key, setting.value)
+            })
+
+            app.ports.getSetting.subscribe(function(key) {
+                var value = localStorage.getItem(key)
+                app.ports.newSetting.send({key: key, value: value})
+            })
         </script>
     </body>
 </html>

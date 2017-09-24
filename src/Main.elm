@@ -3,8 +3,9 @@ import Http
 import Navigation
 import UrlParser as Url
 
+import LocalSettings
 import Login
-import Main.Model exposing (Msg(..), Model, Page(..))
+import Main.Model exposing (Msg(..), Model, Page(..), Setting)
 import Zenoss
 import Zenoss.Html
 
@@ -14,15 +15,20 @@ main =
     init = init,
     view =  view,
     update =  update,
-    subscriptions = (\_ -> Sub.none)
+    subscriptions = subscriptions
   }
 
 init: Navigation.Location -> (Model, Cmd Msg)
 init _ = 
   (
       Model (Just LoginPage) "" "" "" [],
-      Cmd.none
+      LocalSettings.loadInitialSettings
   )
+
+
+subscriptions: Model -> Sub Msg
+subscriptions _ =
+    LocalSettings.newSetting NewSetting
 
 
 route: Url.Parser (Page -> a) a
@@ -39,6 +45,9 @@ update msg model =
     UrlChange l -> 
       ({model | currentPage = Url.parseHash route l}, Cmd.none)
 
+    NewSetting s ->
+      (LocalSettings.storeSetting s model, Cmd.none)
+
     UpdateHostname h ->
       ({model | hostname = h}, Cmd.none)
 
@@ -52,7 +61,12 @@ update msg model =
       let
         cMsg = Tuple.second (update FetchEvents model)
       in
-        model ! [cMsg, Navigation.newUrl "#Events"]
+        model ! [
+          cMsg, Navigation.newUrl "#Events",
+          LocalSettings.setSetting {key = "Zhostname", value = Just model.hostname},
+          LocalSettings.setSetting {key = "Zusername", value = Just model.username},
+          LocalSettings.setSetting {key = "Zpassword", value = Just model.password}
+        ]
 
     FetchEvents ->
       let
@@ -80,7 +94,7 @@ view: Model -> Html Msg
 view model =
   case model.currentPage of
     Just LoginPage -> 
-      Login.pageView
+      Login.pageView model
 
     Just Events -> 
         div [] [

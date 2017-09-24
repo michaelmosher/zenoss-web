@@ -3,6 +3,11 @@ module Main.Model exposing (..)
 import Http
 import Navigation
 
+type alias Setting = {
+    key:  String,
+    value: Maybe String
+}
+
 type Page = LoginPage | Events
 
 type EventState = New | Acknowledged
@@ -28,6 +33,7 @@ type alias Model = {
 
 type Msg =
   UrlChange Navigation.Location
+  | NewSetting Setting
   | UpdateHostname String
   | UpdateUsername String
   | UpdatePassword String
