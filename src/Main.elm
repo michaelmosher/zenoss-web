@@ -6,7 +6,7 @@ import UrlParser as Url exposing ((</>))
 import LocalSettings
 import Login
 import Main.Model exposing (Msg(..), Model, Page(..), Setting)
-import Zenoss
+import Zenoss.Http
 import Zenoss.Html
 
 main : Program Never Model Msg
@@ -77,7 +77,7 @@ update msg model =
             password = model.password
         }
       in
-        (model, Http.send NewEvents (Zenoss.eventsRequest auth))
+        (model, Http.send NewEvents (Zenoss.Http.queryEvents auth))
 
     NewEvents (Ok e) ->
       ({model | events = e}, Cmd.none)

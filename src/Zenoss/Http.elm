@@ -1,4 +1,4 @@
-module Zenoss exposing (eventsRequest)
+module Zenoss.Http exposing (queryEvents)
 
 import Base64
 import Http
@@ -14,8 +14,16 @@ type alias Auth = {
   password: String
 }
 
-eventsRequest: Auth -> Http.Request (List Event)
-eventsRequest auth =
+queryEvents: Auth -> Http.Request (List Event)
+queryEvents auth =
+    let
+        body = eventsRequestBody "query" queryEventData
+    in
+        eventsRequest auth body queryEventDecoder
+
+
+eventsRequest: Auth -> Http.Body -> Decode.Decoder a -> Http.Request a
+eventsRequest auth body decoder =
   let
     username = auth.username
     password = auth.password
@@ -26,41 +34,50 @@ eventsRequest auth =
       Http.header "Authorization" authString
     ],
     url = "https://" ++ auth.hostname ++ "/zport/dmd/evconsole_router",
-    body = eventsRequestBody,
-    expect = Http.expectJson decodeEventsResponse,
+    body = body,
+    expect = Http.expectJson decoder,
     timeout = Nothing,
     withCredentials = False
   }
 
-eventsRequestBody: Http.Body
-eventsRequestBody =
-  Json.object [
-      ("action", Json.string "EventsRouter"),
-      ("method", Json.string "query"),
-      ("tid", Json.int 1),
-      ("data", Json.list [
-        Json.object [
-          ("limit", Json.int 20),
-          ("sort", Json.string "severity"),
-          ("params", Json.object [
+
+queryEventData: Json.Value
+queryEventData =
+    let
+        filter = Json.object [
             ("eventState", Json.list [
-              Json.int 0,
-              Json.int 1
+                Json.int 0,
+                Json.int 1
             ]),
             ("prodState", Json.list [
-              Json.int 1000,
-              Json.int 500,
-              Json.int 400,
-              Json.int 300
+                Json.int 1000,
+                Json.int 500,
+                Json.int 400,
+                Json.int 300
             ])
-          ])
         ]
-      ])
+    in
+        Json.list [
+            Json.object [
+                ("limit", Json.int 20),
+                ("sort", Json.string "severity"),
+                ("params", filter)
+            ]
+        ]
+
+
+eventsRequestBody: String -> Json.Value -> Http.Body
+eventsRequestBody method data =
+  Json.object [
+      ("action", Json.string "EventsRouter"),
+      ("method", Json.string method),
+      ("tid", Json.int 1),
+      ("data", data)
     ] |> Http.jsonBody
 
 
-decodeEventsResponse: Decode.Decoder (List Event)
-decodeEventsResponse =
+queryEventDecoder: Decode.Decoder (List Event)
+queryEventDecoder =
   Decode.field "result"
     (Decode.field "events"
       (Decode.list eventDecoder)

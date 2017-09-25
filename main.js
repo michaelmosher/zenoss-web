@@ -11309,7 +11309,7 @@ var _truqu$elm_base64$Base64_Encode$encode = function (input) {
 var _truqu$elm_base64$Base64$decode = _truqu$elm_base64$Base64_Decode$decode;
 var _truqu$elm_base64$Base64$encode = _truqu$elm_base64$Base64_Encode$encode;
 
-var _michaelmosher$zenoss_web$Zenoss$stderrDecoder = A2(
+var _michaelmosher$zenoss_web$Zenoss_Http$stderrDecoder = A2(
 	_elm_lang$core$Json_Decode$andThen,
 	function (l) {
 		return _elm_lang$core$Json_Decode$succeed(
@@ -11323,7 +11323,7 @@ var _michaelmosher$zenoss_web$Zenoss$stderrDecoder = A2(
 				l));
 	},
 	_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string));
-var _michaelmosher$zenoss_web$Zenoss$eventStateDecoder = A2(
+var _michaelmosher$zenoss_web$Zenoss_Http$eventStateDecoder = A2(
 	_elm_lang$core$Json_Decode$andThen,
 	function (str) {
 		var _p0 = str;
@@ -11338,7 +11338,7 @@ var _michaelmosher$zenoss_web$Zenoss$eventStateDecoder = A2(
 		}
 	},
 	_elm_lang$core$Json_Decode$string);
-var _michaelmosher$zenoss_web$Zenoss$severityDecoder = A2(
+var _michaelmosher$zenoss_web$Zenoss_Http$severityDecoder = A2(
 	_elm_lang$core$Json_Decode$andThen,
 	function (num) {
 		var _p1 = num;
@@ -11360,7 +11360,7 @@ var _michaelmosher$zenoss_web$Zenoss$severityDecoder = A2(
 		}
 	},
 	_elm_lang$core$Json_Decode$int);
-var _michaelmosher$zenoss_web$Zenoss$eventDecoder = A4(
+var _michaelmosher$zenoss_web$Zenoss_Http$eventDecoder = A4(
 	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optionalAt,
 	{
 		ctor: '::',
@@ -11371,7 +11371,7 @@ var _michaelmosher$zenoss_web$Zenoss$eventDecoder = A4(
 			_1: {ctor: '[]'}
 		}
 	},
-	_michaelmosher$zenoss_web$Zenoss$stderrDecoder,
+	_michaelmosher$zenoss_web$Zenoss_Http$stderrDecoder,
 	'N/A',
 	A3(
 		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$requiredAt,
@@ -11404,11 +11404,11 @@ var _michaelmosher$zenoss_web$Zenoss$eventDecoder = A4(
 						A3(
 							_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
 							'eventState',
-							_michaelmosher$zenoss_web$Zenoss$eventStateDecoder,
+							_michaelmosher$zenoss_web$Zenoss_Http$eventStateDecoder,
 							A3(
 								_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
 								'severity',
-								_michaelmosher$zenoss_web$Zenoss$severityDecoder,
+								_michaelmosher$zenoss_web$Zenoss_Http$severityDecoder,
 								A3(
 									_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
 									'prodState',
@@ -11434,151 +11434,155 @@ var _michaelmosher$zenoss_web$Zenoss$eventDecoder = A4(
 												'id',
 												_elm_lang$core$Json_Decode$string,
 												_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_michaelmosher$zenoss_web$Main_Model$Event)))))))))))));
-var _michaelmosher$zenoss_web$Zenoss$decodeEventsResponse = A2(
+var _michaelmosher$zenoss_web$Zenoss_Http$queryEventDecoder = A2(
 	_elm_lang$core$Json_Decode$field,
 	'result',
 	A2(
 		_elm_lang$core$Json_Decode$field,
 		'events',
-		_elm_lang$core$Json_Decode$list(_michaelmosher$zenoss_web$Zenoss$eventDecoder)));
-var _michaelmosher$zenoss_web$Zenoss$eventsRequestBody = _elm_lang$http$Http$jsonBody(
-	_elm_lang$core$Json_Encode$object(
-		{
-			ctor: '::',
-			_0: {
-				ctor: '_Tuple2',
-				_0: 'action',
-				_1: _elm_lang$core$Json_Encode$string('EventsRouter')
-			},
-			_1: {
-				ctor: '::',
-				_0: {
-					ctor: '_Tuple2',
-					_0: 'method',
-					_1: _elm_lang$core$Json_Encode$string('query')
-				},
-				_1: {
+		_elm_lang$core$Json_Decode$list(_michaelmosher$zenoss_web$Zenoss_Http$eventDecoder)));
+var _michaelmosher$zenoss_web$Zenoss_Http$eventsRequestBody = F2(
+	function (method, data) {
+		return _elm_lang$http$Http$jsonBody(
+			_elm_lang$core$Json_Encode$object(
+				{
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
-						_0: 'tid',
-						_1: _elm_lang$core$Json_Encode$int(1)
+						_0: 'action',
+						_1: _elm_lang$core$Json_Encode$string('EventsRouter')
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
-							_0: 'data',
-							_1: _elm_lang$core$Json_Encode$list(
-								{
-									ctor: '::',
-									_0: _elm_lang$core$Json_Encode$object(
-										{
-											ctor: '::',
-											_0: {
-												ctor: '_Tuple2',
-												_0: 'limit',
-												_1: _elm_lang$core$Json_Encode$int(20)
-											},
-											_1: {
-												ctor: '::',
-												_0: {
-													ctor: '_Tuple2',
-													_0: 'sort',
-													_1: _elm_lang$core$Json_Encode$string('severity')
-												},
-												_1: {
-													ctor: '::',
-													_0: {
-														ctor: '_Tuple2',
-														_0: 'params',
-														_1: _elm_lang$core$Json_Encode$object(
-															{
-																ctor: '::',
-																_0: {
-																	ctor: '_Tuple2',
-																	_0: 'eventState',
-																	_1: _elm_lang$core$Json_Encode$list(
-																		{
-																			ctor: '::',
-																			_0: _elm_lang$core$Json_Encode$int(0),
-																			_1: {
-																				ctor: '::',
-																				_0: _elm_lang$core$Json_Encode$int(1),
-																				_1: {ctor: '[]'}
-																			}
-																		})
-																},
-																_1: {
-																	ctor: '::',
-																	_0: {
-																		ctor: '_Tuple2',
-																		_0: 'prodState',
-																		_1: _elm_lang$core$Json_Encode$list(
-																			{
-																				ctor: '::',
-																				_0: _elm_lang$core$Json_Encode$int(1000),
-																				_1: {
-																					ctor: '::',
-																					_0: _elm_lang$core$Json_Encode$int(500),
-																					_1: {
-																						ctor: '::',
-																						_0: _elm_lang$core$Json_Encode$int(400),
-																						_1: {
-																							ctor: '::',
-																							_0: _elm_lang$core$Json_Encode$int(300),
-																							_1: {ctor: '[]'}
-																						}
-																					}
-																				}
-																			})
-																	},
-																	_1: {ctor: '[]'}
-																}
-															})
-													},
-													_1: {ctor: '[]'}
-												}
-											}
-										}),
-									_1: {ctor: '[]'}
-								})
+							_0: 'method',
+							_1: _elm_lang$core$Json_Encode$string(method)
 						},
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'tid',
+								_1: _elm_lang$core$Json_Encode$int(1)
+							},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'data', _1: data},
+								_1: {ctor: '[]'}
+							}
+						}
 					}
-				}
-			}
-		}));
-var _michaelmosher$zenoss_web$Zenoss$eventsRequest = function (auth) {
-	var password = auth.password;
-	var username = auth.username;
-	var authString = A2(
-		_elm_lang$core$Basics_ops['++'],
-		'Basic ',
-		_truqu$elm_base64$Base64$encode(
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				username,
-				A2(_elm_lang$core$Basics_ops['++'], ':', password))));
-	return _elm_lang$http$Http$request(
+				}));
+	});
+var _michaelmosher$zenoss_web$Zenoss_Http$queryEventData = function () {
+	var filter = _elm_lang$core$Json_Encode$object(
 		{
-			method: 'POST',
-			headers: {
-				ctor: '::',
-				_0: A2(_elm_lang$http$Http$header, 'Authorization', authString),
-				_1: {ctor: '[]'}
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'eventState',
+				_1: _elm_lang$core$Json_Encode$list(
+					{
+						ctor: '::',
+						_0: _elm_lang$core$Json_Encode$int(0),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$core$Json_Encode$int(1),
+							_1: {ctor: '[]'}
+						}
+					})
 			},
-			url: A2(
-				_elm_lang$core$Basics_ops['++'],
-				'https://',
-				A2(_elm_lang$core$Basics_ops['++'], auth.hostname, '/zport/dmd/evconsole_router')),
-			body: _michaelmosher$zenoss_web$Zenoss$eventsRequestBody,
-			expect: _elm_lang$http$Http$expectJson(_michaelmosher$zenoss_web$Zenoss$decodeEventsResponse),
-			timeout: _elm_lang$core$Maybe$Nothing,
-			withCredentials: false
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'prodState',
+					_1: _elm_lang$core$Json_Encode$list(
+						{
+							ctor: '::',
+							_0: _elm_lang$core$Json_Encode$int(1000),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$core$Json_Encode$int(500),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$core$Json_Encode$int(400),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$core$Json_Encode$int(300),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						})
+				},
+				_1: {ctor: '[]'}
+			}
 		});
+	return _elm_lang$core$Json_Encode$list(
+		{
+			ctor: '::',
+			_0: _elm_lang$core$Json_Encode$object(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'limit',
+						_1: _elm_lang$core$Json_Encode$int(20)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'sort',
+							_1: _elm_lang$core$Json_Encode$string('severity')
+						},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'params', _1: filter},
+							_1: {ctor: '[]'}
+						}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
+}();
+var _michaelmosher$zenoss_web$Zenoss_Http$eventsRequest = F3(
+	function (auth, body, decoder) {
+		var password = auth.password;
+		var username = auth.username;
+		var authString = A2(
+			_elm_lang$core$Basics_ops['++'],
+			'Basic ',
+			_truqu$elm_base64$Base64$encode(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					username,
+					A2(_elm_lang$core$Basics_ops['++'], ':', password))));
+		return _elm_lang$http$Http$request(
+			{
+				method: 'POST',
+				headers: {
+					ctor: '::',
+					_0: A2(_elm_lang$http$Http$header, 'Authorization', authString),
+					_1: {ctor: '[]'}
+				},
+				url: A2(
+					_elm_lang$core$Basics_ops['++'],
+					'https://',
+					A2(_elm_lang$core$Basics_ops['++'], auth.hostname, '/zport/dmd/evconsole_router')),
+				body: body,
+				expect: _elm_lang$http$Http$expectJson(decoder),
+				timeout: _elm_lang$core$Maybe$Nothing,
+				withCredentials: false
+			});
+	});
+var _michaelmosher$zenoss_web$Zenoss_Http$queryEvents = function (auth) {
+	var body = A2(_michaelmosher$zenoss_web$Zenoss_Http$eventsRequestBody, 'query', _michaelmosher$zenoss_web$Zenoss_Http$queryEventData);
+	return A3(_michaelmosher$zenoss_web$Zenoss_Http$eventsRequest, auth, body, _michaelmosher$zenoss_web$Zenoss_Http$queryEventDecoder);
 };
-var _michaelmosher$zenoss_web$Zenoss$Auth = F3(
+var _michaelmosher$zenoss_web$Zenoss_Http$Auth = F3(
 	function (a, b, c) {
 		return {hostname: a, username: b, password: c};
 	});
@@ -12326,7 +12330,7 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 					_1: A2(
 						_elm_lang$http$Http$send,
 						_michaelmosher$zenoss_web$Main_Model$NewEvents,
-						_michaelmosher$zenoss_web$Zenoss$eventsRequest(auth))
+						_michaelmosher$zenoss_web$Zenoss_Http$queryEvents(auth))
 				};
 			case 'NewEvents':
 				if (_p1._0.ctor === 'Ok') {
