@@ -9,42 +9,45 @@ import Json.Encode as Json
 import Main.Model exposing (Event, EventState(..))
 
 type alias Auth = {
-  hostname: String,
-  username: String,
-  password: String
+    hostname: String,
+    username: String,
+    password: String
 }
 
 queryEvents: Auth -> Http.Request (List Event)
 queryEvents auth =
-    let
-        body = eventsRequestBody "query" queryEventData
+    let body = eventsRequestBody "query" queryEventData
     in
-        eventsRequest auth body queryEventDecoder
+        eventsRequest auth body queryEventsDecoder
 
+
+acknowledgeEvents: Auth -> List String -> Http.Request Bool
+acknowledgeEvents auth eventIds =
+    let body = acknowledgeEventsData eventIds |> eventsRequestBody "acknowledge"
+    in
+        eventsRequest auth body acknowledgeEventsDecoder -- <- TODO
 
 eventsRequest: Auth -> Http.Body -> Decode.Decoder a -> Http.Request a
 eventsRequest auth body decoder =
-  let
-    username = auth.username
-    password = auth.password
-    authString = "Basic " ++ Base64.encode(username ++ ":" ++ password)
-  in Http.request {
-    method = "POST",
-    headers = [
-      Http.header "Authorization" authString
-    ],
-    url = "https://" ++ auth.hostname ++ "/zport/dmd/evconsole_router",
-    body = body,
-    expect = Http.expectJson decoder,
-    timeout = Nothing,
-    withCredentials = False
-  }
+    let username = auth.username
+        password = auth.password
+        authString = "Basic " ++ Base64.encode(username ++ ":" ++ password)
+    in Http.request {
+        method = "POST",
+        headers = [
+            Http.header "Authorization" authString
+        ],
+        url = "https://" ++ auth.hostname ++ "/zport/dmd/evconsole_router",
+        body = body,
+        expect = Http.expectJson decoder,
+        timeout = Nothing,
+        withCredentials = False
+    }
 
 
 queryEventData: Json.Value
 queryEventData =
-    let
-        filter = Json.object [
+    let filter = Json.object [
             ("eventState", Json.list [
                 Json.int 0,
                 Json.int 1
@@ -66,23 +69,37 @@ queryEventData =
         ]
 
 
+acknowledgeEventsData: List String -> Json.Value
+acknowledgeEventsData eventIds =
+    Json.list [
+        Json.object [
+            ("evids", List.map Json.string eventIds |> Json.list)
+        ]
+    ]
+
+
 eventsRequestBody: String -> Json.Value -> Http.Body
 eventsRequestBody method data =
-  Json.object [
-      ("action", Json.string "EventsRouter"),
-      ("method", Json.string method),
-      ("tid", Json.int 1),
-      ("data", data)
-    ] |> Http.jsonBody
+    Json.object [
+        ("action", Json.string "EventsRouter"),
+        ("method", Json.string method),
+        ("tid", Json.int 1),
+        ("data", data)
+      ] |> Http.jsonBody
 
 
-queryEventDecoder: Decode.Decoder (List Event)
-queryEventDecoder =
-  Decode.field "result"
-    (Decode.field "events"
-      (Decode.list eventDecoder)
-    )
+queryEventsDecoder: Decode.Decoder (List Event)
+queryEventsDecoder =
+    Decode.field "result"
+        (Decode.field "events"
+            (Decode.list eventDecoder)
+        )
 
+
+acknowledgeEventsDecoder: Decode.Decoder Bool
+acknowledgeEventsDecoder =
+    Decode.field "result"
+        (Decode.field "success" Decode.bool)
 
 eventDecoder: Decode.Decoder Event
 eventDecoder =
@@ -103,24 +120,24 @@ eventDecoder =
 
 severityDecoder: Decode.Decoder String
 severityDecoder =
-  Decode.int |> Decode.andThen (\num ->
-    case num of
-      5 -> Decode.succeed "Critical"
-      4 -> Decode.succeed "Error"
-      3 -> Decode.succeed "Warning"
-      2 -> Decode.succeed "Info"
-      u -> Decode.fail <| "Unknown Severity: " ++ (toString u)
-  )
+    Decode.int |> Decode.andThen (\num ->
+        case num of
+            5 -> Decode.succeed "Critical"
+            4 -> Decode.succeed "Error"
+            3 -> Decode.succeed "Warning"
+            2 -> Decode.succeed "Info"
+            u -> Decode.fail <| "Unknown Severity: " ++ (toString u)
+    )
 
 
 eventStateDecoder: Decode.Decoder EventState
 eventStateDecoder =
-  Decode.string |> Decode.andThen (\str ->
-    case str of
-      "New" -> Decode.succeed New
-      "Acknowledged" -> Decode.succeed Acknowledged
-      somethingElse -> Decode.fail <| "Uknown EventState: " ++ somethingElse
-  )
+    Decode.string |> Decode.andThen (\str ->
+        case str of
+            "New" -> Decode.succeed New
+            "Acknowledged" -> Decode.succeed Acknowledged
+            somethingElse -> Decode.fail <| "Uknown EventState: " ++ somethingElse
+    )
 
 
 stderrDecoder: Decode.Decoder String

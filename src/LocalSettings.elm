@@ -21,8 +21,7 @@ loadInitialSettings =
 
 storeSetting: Setting -> Model -> Model
 storeSetting s model =
-    let
-        value = case s.value of
+    let value = case s.value of
             Just s -> s
             Nothing -> ""
     in
