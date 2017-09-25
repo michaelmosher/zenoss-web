@@ -10636,14 +10636,7 @@ var _michaelmosher$zenoss_web$Login$loginField = F2(
 			{ctor: '[]'});
 	});
 var _michaelmosher$zenoss_web$Login$passwordLoginField = function (password) {
-	var defaultValue = function () {
-		var _p0 = password;
-		if (_p0 === '') {
-			return _elm_lang$html$Html_Attributes$placeholder('Zenoss Password');
-		} else {
-			return _elm_lang$html$Html_Attributes$value(password);
-		}
-	}();
+	var defaultValue = _elm_lang$core$Native_Utils.eq(password, '') ? _elm_lang$html$Html_Attributes$placeholder('Zenoss Password') : _elm_lang$html$Html_Attributes$value(password);
 	return A2(
 		_michaelmosher$zenoss_web$Login$loginField,
 		{
@@ -10658,14 +10651,7 @@ var _michaelmosher$zenoss_web$Login$passwordLoginField = function (password) {
 		_michaelmosher$zenoss_web$Main_Model$UpdatePassword);
 };
 var _michaelmosher$zenoss_web$Login$usernameLoginField = function (username) {
-	var defaultValue = function () {
-		var _p1 = username;
-		if (_p1 === '') {
-			return _elm_lang$html$Html_Attributes$placeholder('Zenoss Username');
-		} else {
-			return _elm_lang$html$Html_Attributes$value(username);
-		}
-	}();
+	var defaultValue = _elm_lang$core$Native_Utils.eq(username, '') ? _elm_lang$html$Html_Attributes$placeholder('Zenoss Username') : _elm_lang$html$Html_Attributes$value(username);
 	return A2(
 		_michaelmosher$zenoss_web$Login$loginField,
 		{
@@ -10676,14 +10662,7 @@ var _michaelmosher$zenoss_web$Login$usernameLoginField = function (username) {
 		_michaelmosher$zenoss_web$Main_Model$UpdateUsername);
 };
 var _michaelmosher$zenoss_web$Login$hostnameLoginField = function (hostname) {
-	var defaultValue = function () {
-		var _p2 = hostname;
-		if (_p2 === '') {
-			return _elm_lang$html$Html_Attributes$placeholder('Zenoss Hostname');
-		} else {
-			return _elm_lang$html$Html_Attributes$value(hostname);
-		}
-	}();
+	var defaultValue = _elm_lang$core$Native_Utils.eq(hostname, '') ? _elm_lang$html$Html_Attributes$placeholder('Zenoss Hostname') : _elm_lang$html$Html_Attributes$value(hostname);
 	return A2(
 		_michaelmosher$zenoss_web$Login$loginField,
 		{
@@ -11434,7 +11413,11 @@ var _michaelmosher$zenoss_web$Zenoss_Http$eventDecoder = A4(
 												'id',
 												_elm_lang$core$Json_Decode$string,
 												_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_michaelmosher$zenoss_web$Main_Model$Event)))))))))))));
-var _michaelmosher$zenoss_web$Zenoss_Http$queryEventDecoder = A2(
+var _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsDecoder = A2(
+	_elm_lang$core$Json_Decode$field,
+	'result',
+	A2(_elm_lang$core$Json_Decode$field, 'success', _elm_lang$core$Json_Decode$bool));
+var _michaelmosher$zenoss_web$Zenoss_Http$queryEventsDecoder = A2(
 	_elm_lang$core$Json_Decode$field,
 	'result',
 	A2(
@@ -11475,6 +11458,24 @@ var _michaelmosher$zenoss_web$Zenoss_Http$eventsRequestBody = F2(
 					}
 				}));
 	});
+var _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsData = function (eventIds) {
+	return _elm_lang$core$Json_Encode$list(
+		{
+			ctor: '::',
+			_0: _elm_lang$core$Json_Encode$object(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'evids',
+						_1: _elm_lang$core$Json_Encode$list(
+							A2(_elm_lang$core$List$map, _elm_lang$core$Json_Encode$string, eventIds))
+					},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
 var _michaelmosher$zenoss_web$Zenoss_Http$queryEventData = function () {
 	var filter = _elm_lang$core$Json_Encode$object(
 		{
@@ -11578,9 +11579,17 @@ var _michaelmosher$zenoss_web$Zenoss_Http$eventsRequest = F3(
 				withCredentials: false
 			});
 	});
+var _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEvents = F2(
+	function (auth, eventIds) {
+		var body = A2(
+			_michaelmosher$zenoss_web$Zenoss_Http$eventsRequestBody,
+			'acknowledge',
+			_michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsData(eventIds));
+		return A3(_michaelmosher$zenoss_web$Zenoss_Http$eventsRequest, auth, body, _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsDecoder);
+	});
 var _michaelmosher$zenoss_web$Zenoss_Http$queryEvents = function (auth) {
 	var body = A2(_michaelmosher$zenoss_web$Zenoss_Http$eventsRequestBody, 'query', _michaelmosher$zenoss_web$Zenoss_Http$queryEventData);
-	return A3(_michaelmosher$zenoss_web$Zenoss_Http$eventsRequest, auth, body, _michaelmosher$zenoss_web$Zenoss_Http$queryEventDecoder);
+	return A3(_michaelmosher$zenoss_web$Zenoss_Http$eventsRequest, auth, body, _michaelmosher$zenoss_web$Zenoss_Http$queryEventsDecoder);
 };
 var _michaelmosher$zenoss_web$Zenoss_Http$Auth = F3(
 	function (a, b, c) {
@@ -11761,16 +11770,7 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEventState = function (s) {
 		}
 	};
 	var css = _elm_lang$html$Html_Attributes$style(
-		_elm_lang$core$List$concat(
-			{
-				ctor: '::',
-				_0: staticStyles,
-				_1: {
-					ctor: '::',
-					_0: dynamicStyles,
-					_1: {ctor: '[]'}
-				}
-			}));
+		A2(_elm_lang$core$Basics_ops['++'], staticStyles, dynamicStyles));
 	return A2(
 		_elm_lang$html$Html$div,
 		{
