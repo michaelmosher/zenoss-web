@@ -79,7 +79,7 @@ renderDetailedEvent event =
             eventDetailField "latest occurance" event.lastTime,
             eventDetailField "error output" event.stdErr
         ]
-        
+
 
 renderEventSeverity: String -> Html a
 renderEventSeverity s =
@@ -92,7 +92,7 @@ renderEventSeverity s =
             Svg.Attributes.height "30"
         ]
     in
-        div [style [("width", "50px")]] [
+        div [style [("min-width", "50px")]] [
             Svg.svg svgAttrs [severityShape s]
         ]
 
@@ -138,7 +138,7 @@ renderEventOwner owner =
 renderEventState: EventState -> Html a
 renderEventState s =
     let staticStyles = [
-            ("width", "50px"),
+            ("min-width", "50px"),
             ("text-align", "center")
         ]
         dynamicStyles = case s of
