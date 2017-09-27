@@ -10496,6 +10496,13 @@ var _michaelmosher$zenoss_web$Main_Model$EventsPage = {ctor: 'EventsPage'};
 var _michaelmosher$zenoss_web$Main_Model$LoginPage = {ctor: 'LoginPage'};
 var _michaelmosher$zenoss_web$Main_Model$Acknowledged = {ctor: 'Acknowledged'};
 var _michaelmosher$zenoss_web$Main_Model$New = {ctor: 'New'};
+var _michaelmosher$zenoss_web$Main_Model$AcknowledgeResponse = F2(
+	function (a, b) {
+		return {ctor: 'AcknowledgeResponse', _0: a, _1: b};
+	});
+var _michaelmosher$zenoss_web$Main_Model$AcknowledgeEvent = function (a) {
+	return {ctor: 'AcknowledgeEvent', _0: a};
+};
 var _michaelmosher$zenoss_web$Main_Model$EventDetails = function (a) {
 	return {ctor: 'EventDetails', _0: a};
 };
@@ -11458,7 +11465,7 @@ var _michaelmosher$zenoss_web$Zenoss_Http$eventsRequestBody = F2(
 					}
 				}));
 	});
-var _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsData = function (eventIds) {
+var _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsData = function (eventId) {
 	return _elm_lang$core$Json_Encode$list(
 		{
 			ctor: '::',
@@ -11469,7 +11476,11 @@ var _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsData = function (even
 						ctor: '_Tuple2',
 						_0: 'evids',
 						_1: _elm_lang$core$Json_Encode$list(
-							A2(_elm_lang$core$List$map, _elm_lang$core$Json_Encode$string, eventIds))
+							{
+								ctor: '::',
+								_0: _elm_lang$core$Json_Encode$string(eventId),
+								_1: {ctor: '[]'}
+							})
 					},
 					_1: {ctor: '[]'}
 				}),
@@ -11580,11 +11591,11 @@ var _michaelmosher$zenoss_web$Zenoss_Http$eventsRequest = F3(
 			});
 	});
 var _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEvents = F2(
-	function (auth, eventIds) {
+	function (auth, eventId) {
 		var body = A2(
 			_michaelmosher$zenoss_web$Zenoss_Http$eventsRequestBody,
 			'acknowledge',
-			_michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsData(eventIds));
+			_michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsData(eventId));
 		return A3(_michaelmosher$zenoss_web$Zenoss_Http$eventsRequest, auth, body, _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsDecoder);
 	});
 var _michaelmosher$zenoss_web$Zenoss_Http$queryEvents = function (auth) {
@@ -11762,7 +11773,7 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEventState = function (s) {
 	}();
 	var staticStyles = {
 		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'width', _1: '50px'},
+		_0: {ctor: '_Tuple2', _0: 'min-width', _1: '50px'},
 		_1: {
 			ctor: '::',
 			_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
@@ -11901,7 +11912,7 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEventSeverity = function (s) {
 			_0: _elm_lang$html$Html_Attributes$style(
 				{
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'width', _1: '50px'},
+					_0: {ctor: '_Tuple2', _0: 'min-width', _1: '50px'},
 					_1: {ctor: '[]'}
 				}),
 			_1: {ctor: '[]'}
@@ -11970,7 +11981,52 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderDetailedEvent = function (event)
 										_1: {
 											ctor: '::',
 											_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$eventDetailField, 'error output', event.stdErr),
-											_1: {ctor: '[]'}
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$p,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onClick(
+															_michaelmosher$zenoss_web$Main_Model$AcknowledgeEvent(event.id)),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$style(
+																{
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: 'background-color', _1: 'lightgrey'},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: 'border', _1: 'grey solid 1px'},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '10px'},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: 'font-weight', _1: 'bolder'},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: 'cursor', _1: 'pointer'},
+																						_1: {ctor: '[]'}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}),
+															_1: {ctor: '[]'}
+														}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('Acknowledge'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}
 										}
 									}
 								}
@@ -12158,6 +12214,105 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEventList = function (events) {
 		A2(_elm_lang$core$List$map, _michaelmosher$zenoss_web$Zenoss_Html$renderSimpleEvent, events));
 };
 
+var _michaelmosher$zenoss_web$Zenoss$errorEvent = function (err) {
+	return _michaelmosher$zenoss_web$Main_Model$Event('error')('zenoss-web')(
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'Failed to connect to Zenoss server: ',
+			_elm_lang$core$Basics$toString(err)))('Production')('Critical')(_michaelmosher$zenoss_web$Main_Model$New)(_elm_lang$core$Maybe$Nothing)(1)('null')('null')(_elm_lang$core$Maybe$Nothing)('N/A');
+};
+var _michaelmosher$zenoss_web$Zenoss$eventDetailView = F2(
+	function (model, eid) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$h2,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('One Event!'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$renderEventDetails, model.events, eid),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _michaelmosher$zenoss_web$Zenoss$eventsView = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$h2,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Events!'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: _michaelmosher$zenoss_web$Zenoss_Html$renderEventList(model.events),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _michaelmosher$zenoss_web$Zenoss$changeEventState = F2(
+	function (model, eventId) {
+		return A2(
+			_elm_lang$core$List$map,
+			function (event) {
+				if (_elm_lang$core$Native_Utils.eq(event.id, eventId)) {
+					var _p0 = event.eventState;
+					if (_p0.ctor === 'New') {
+						return _elm_lang$core$Native_Utils.update(
+							event,
+							{eventState: _michaelmosher$zenoss_web$Main_Model$Acknowledged});
+					} else {
+						return _elm_lang$core$Native_Utils.update(
+							event,
+							{eventState: _michaelmosher$zenoss_web$Main_Model$New});
+					}
+				} else {
+					return event;
+				}
+			},
+			model.events);
+	});
+var _michaelmosher$zenoss_web$Zenoss$acknowledgeEvent = F2(
+	function (model, eventId) {
+		var events = A2(_michaelmosher$zenoss_web$Zenoss$changeEventState, model, eventId);
+		var request = A2(
+			_michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEvents,
+			{hostname: model.hostname, username: model.username, password: model.password},
+			eventId);
+		var responseHandler = _michaelmosher$zenoss_web$Main_Model$AcknowledgeResponse(eventId);
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{events: events}),
+			_1: A2(_elm_lang$http$Http$send, responseHandler, request)
+		};
+	});
+var _michaelmosher$zenoss_web$Zenoss$refreshEvents = function (model) {
+	var request = _michaelmosher$zenoss_web$Zenoss_Http$queryEvents(
+		{hostname: model.hostname, username: model.username, password: model.password});
+	var responseHandler = _michaelmosher$zenoss_web$Main_Model$NewEvents;
+	return {
+		ctor: '_Tuple2',
+		_0: model,
+		_1: A2(_elm_lang$http$Http$send, responseHandler, request)
+	};
+};
+
 var _michaelmosher$zenoss_web$Main$view = function (model) {
 	var _p0 = model.currentPage;
 	if (_p0.ctor === 'Just') {
@@ -12165,45 +12320,9 @@ var _michaelmosher$zenoss_web$Main$view = function (model) {
 			case 'LoginPage':
 				return _michaelmosher$zenoss_web$Login$pageView(model);
 			case 'EventsPage':
-				return A2(
-					_elm_lang$html$Html$div,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$h2,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('Events!'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: _michaelmosher$zenoss_web$Zenoss_Html$renderEventList(model.events),
-							_1: {ctor: '[]'}
-						}
-					});
+				return _michaelmosher$zenoss_web$Zenoss$eventsView(model);
 			default:
-				return A2(
-					_elm_lang$html$Html$div,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$h2,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('One Event!'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$renderEventDetails, model.events, _p0._0._0),
-							_1: {ctor: '[]'}
-						}
-					});
+				return A2(_michaelmosher$zenoss_web$Zenoss$eventDetailView, model, _p0._0._0);
 		}
 	} else {
 		return A2(
@@ -12323,15 +12442,7 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 						}
 					});
 			case 'FetchEvents':
-				var auth = {hostname: model.hostname, username: model.username, password: model.password};
-				return {
-					ctor: '_Tuple2',
-					_0: model,
-					_1: A2(
-						_elm_lang$http$Http$send,
-						_michaelmosher$zenoss_web$Main_Model$NewEvents,
-						_michaelmosher$zenoss_web$Zenoss_Http$queryEvents(auth))
-				};
+				return _michaelmosher$zenoss_web$Zenoss$refreshEvents(model);
 			case 'NewEvents':
 				if (_p1._0.ctor === 'Ok') {
 					return {
@@ -12342,11 +12453,11 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				} else {
-					var loginFailed = _michaelmosher$zenoss_web$Main_Model$Event('')('zenoss-web')(
+					var loginFailed = _michaelmosher$zenoss_web$Zenoss$errorEvent(
 						A2(
 							_elm_lang$core$Basics_ops['++'],
 							'Failed to connect to Zenoss server: ',
-							_elm_lang$core$Basics$toString(_p1._0._0)))('Production')('Critical')(_michaelmosher$zenoss_web$Main_Model$New)(_elm_lang$core$Maybe$Nothing)(1)('null')('null')(_elm_lang$core$Maybe$Nothing)('N/A');
+							_elm_lang$core$Basics$toString(_p1._0._0)));
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -12361,13 +12472,29 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				}
-			default:
+			case 'EventDetails':
 				return {
 					ctor: '_Tuple2',
 					_0: model,
 					_1: _elm_lang$navigation$Navigation$newUrl(
 						A2(_elm_lang$core$Basics_ops['++'], '#Event/', _p1._0))
 				};
+			case 'AcknowledgeEvent':
+				return A2(_michaelmosher$zenoss_web$Zenoss$acknowledgeEvent, model, _p1._0);
+			default:
+				if (_p1._1.ctor === 'Ok') {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								events: A2(_michaelmosher$zenoss_web$Zenoss$changeEventState, model, _p1._0)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
 		}
 	});
 var _michaelmosher$zenoss_web$Main$subscriptions = function (_p2) {

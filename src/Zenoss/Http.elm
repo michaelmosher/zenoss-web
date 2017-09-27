@@ -1,4 +1,4 @@
-module Zenoss.Http exposing (queryEvents)
+module Zenoss.Http exposing (queryEvents, acknowledgeEvents)
 
 import Base64
 import Http
@@ -21,11 +21,11 @@ queryEvents auth =
         eventsRequest auth body queryEventsDecoder
 
 
-acknowledgeEvents: Auth -> List String -> Http.Request Bool
-acknowledgeEvents auth eventIds =
-    let body = acknowledgeEventsData eventIds |> eventsRequestBody "acknowledge"
+acknowledgeEvents: Auth -> String -> Http.Request Bool
+acknowledgeEvents auth eventId =
+    let body = acknowledgeEventsData eventId |> eventsRequestBody "acknowledge"
     in
-        eventsRequest auth body acknowledgeEventsDecoder -- <- TODO
+        eventsRequest auth body acknowledgeEventsDecoder
 
 eventsRequest: Auth -> Http.Body -> Decode.Decoder a -> Http.Request a
 eventsRequest auth body decoder =
@@ -69,11 +69,13 @@ queryEventData =
         ]
 
 
-acknowledgeEventsData: List String -> Json.Value
-acknowledgeEventsData eventIds =
+acknowledgeEventsData: String -> Json.Value
+acknowledgeEventsData eventId =
     Json.list [
         Json.object [
-            ("evids", List.map Json.string eventIds |> Json.list)
+            ("evids", Json.list [
+                Json.string eventId
+            ])
         ]
     ]
 

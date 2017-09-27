@@ -45,3 +45,5 @@ type Msg =
     | FetchEvents
     | NewEvents (Result Http.Error (List Event))
     | EventDetails String
+    | AcknowledgeEvent String
+    | AcknowledgeResponse String (Result Http.Error (Bool))

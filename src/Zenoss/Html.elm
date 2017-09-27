@@ -1,7 +1,7 @@
 module Zenoss.Html exposing (renderEventList, renderEventDetails)
 
 import Char
-import Html exposing (Html, div, span, p, text)
+import Html exposing (Html, div, span, p, button, text)
 import Html.Attributes exposing (class, style)
 import Html.Events exposing (onClick)
 import Svg
@@ -77,7 +77,18 @@ renderDetailedEvent event =
             eventDetailField "owner" ownerString,
             eventDetailField "first occurance" event.firstTime,
             eventDetailField "latest occurance" event.lastTime,
-            eventDetailField "error output" event.stdErr
+            eventDetailField "error output" event.stdErr,
+            p [
+                onClick (AcknowledgeEvent event.id),
+                style [
+                    ("background-color", "lightgrey"),
+                    ("border", "grey solid 1px"),
+                    ("border-radius", "10px"),
+                    ("font-weight", "bolder"),
+                    ("text-align", "center"),
+                    ("cursor", "pointer")
+                ]
+            ] [text "Acknowledge"]
         ]
 
 
