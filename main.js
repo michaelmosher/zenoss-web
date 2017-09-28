@@ -10496,6 +10496,13 @@ var _michaelmosher$zenoss_web$Main_Model$EventsPage = {ctor: 'EventsPage'};
 var _michaelmosher$zenoss_web$Main_Model$LoginPage = {ctor: 'LoginPage'};
 var _michaelmosher$zenoss_web$Main_Model$Acknowledged = {ctor: 'Acknowledged'};
 var _michaelmosher$zenoss_web$Main_Model$New = {ctor: 'New'};
+var _michaelmosher$zenoss_web$Main_Model$UnacknowledgeResponse = F2(
+	function (a, b) {
+		return {ctor: 'UnacknowledgeResponse', _0: a, _1: b};
+	});
+var _michaelmosher$zenoss_web$Main_Model$UnacknowledgeEvent = function (a) {
+	return {ctor: 'UnacknowledgeEvent', _0: a};
+};
 var _michaelmosher$zenoss_web$Main_Model$AcknowledgeResponse = F2(
 	function (a, b) {
 		return {ctor: 'AcknowledgeResponse', _0: a, _1: b};
@@ -11590,6 +11597,14 @@ var _michaelmosher$zenoss_web$Zenoss_Http$eventsRequest = F3(
 				withCredentials: false
 			});
 	});
+var _michaelmosher$zenoss_web$Zenoss_Http$unacknowledgeEvents = F2(
+	function (auth, eventId) {
+		var body = A2(
+			_michaelmosher$zenoss_web$Zenoss_Http$eventsRequestBody,
+			'unacknowledge',
+			_michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsData(eventId));
+		return A3(_michaelmosher$zenoss_web$Zenoss_Http$eventsRequest, auth, body, _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsDecoder);
+	});
 var _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEvents = F2(
 	function (auth, eventId) {
 		var body = A2(
@@ -11637,7 +11652,11 @@ var _michaelmosher$zenoss_web$Zenoss_Html$eventDetailField = F2(
 									_1: {
 										ctor: '::',
 										_0: {ctor: '_Tuple2', _0: 'flex-grow', _1: '1'},
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'padding-right', _1: '5px'},
+											_1: {ctor: '[]'}
+										}
 									}
 								}
 							}),
@@ -11750,6 +11769,52 @@ var _michaelmosher$zenoss_web$Zenoss_Html$eventStateString = function (e) {
 			_elm_lang$core$Char$fromCode(10003));
 	}
 };
+var _michaelmosher$zenoss_web$Zenoss_Html$renderStateChangeButton = F2(
+	function (eventId, state) {
+		var $this = _elm_lang$core$Native_Utils.eq(state, _michaelmosher$zenoss_web$Main_Model$New) ? {clickMsg: _michaelmosher$zenoss_web$Main_Model$AcknowledgeEvent, buttonText: 'Acknowledge'} : {clickMsg: _michaelmosher$zenoss_web$Main_Model$UnacknowledgeEvent, buttonText: 'Un-acknowledge'};
+		return A2(
+			_elm_lang$html$Html$p,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(
+					$this.clickMsg(eventId)),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$style(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'background-color', _1: 'lightgrey'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'border', _1: 'grey solid 1px'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '10px'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'font-weight', _1: 'bolder'},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 'cursor', _1: 'pointer'},
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text($this.buttonText),
+				_1: {ctor: '[]'}
+			});
+	});
 var _michaelmosher$zenoss_web$Zenoss_Html$renderEventState = function (s) {
 	var dynamicStyles = function () {
 		var _p2 = s;
@@ -11884,7 +11949,7 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEventDeviceName = function (d) {
 					_0: {ctor: '_Tuple2', _0: 'word-break', _1: 'break-all'},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'padding-right', _1: '3px'},
+						_0: {ctor: '_Tuple2', _0: 'padding-right', _1: '5px'},
 						_1: {ctor: '[]'}
 					}
 				}
@@ -12004,48 +12069,7 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderDetailedEvent = function (event)
 											_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$eventDetailField, 'error output', event.stdErr),
 											_1: {
 												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$p,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Events$onClick(
-															_michaelmosher$zenoss_web$Main_Model$AcknowledgeEvent(event.id)),
-														_1: {
-															ctor: '::',
-															_0: _elm_lang$html$Html_Attributes$style(
-																{
-																	ctor: '::',
-																	_0: {ctor: '_Tuple2', _0: 'background-color', _1: 'lightgrey'},
-																	_1: {
-																		ctor: '::',
-																		_0: {ctor: '_Tuple2', _0: 'border', _1: 'grey solid 1px'},
-																		_1: {
-																			ctor: '::',
-																			_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '10px'},
-																			_1: {
-																				ctor: '::',
-																				_0: {ctor: '_Tuple2', _0: 'font-weight', _1: 'bolder'},
-																				_1: {
-																					ctor: '::',
-																					_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
-																					_1: {
-																						ctor: '::',
-																						_0: {ctor: '_Tuple2', _0: 'cursor', _1: 'pointer'},
-																						_1: {ctor: '[]'}
-																					}
-																				}
-																			}
-																		}
-																	}
-																}),
-															_1: {ctor: '[]'}
-														}
-													},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('Acknowledge'),
-														_1: {ctor: '[]'}
-													}),
+												_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$renderStateChangeButton, event.id, event.eventState),
 												_1: {ctor: '[]'}
 											}
 										}
@@ -12307,6 +12331,22 @@ var _michaelmosher$zenoss_web$Zenoss$changeEventState = F2(
 			},
 			model.events);
 	});
+var _michaelmosher$zenoss_web$Zenoss$unacknowledgeEvent = F2(
+	function (model, eventId) {
+		var events = A2(_michaelmosher$zenoss_web$Zenoss$changeEventState, model, eventId);
+		var request = A2(
+			_michaelmosher$zenoss_web$Zenoss_Http$unacknowledgeEvents,
+			{hostname: model.hostname, username: model.username, password: model.password},
+			eventId);
+		var responseHandler = _michaelmosher$zenoss_web$Main_Model$UnacknowledgeResponse(eventId);
+		return {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Native_Utils.update(
+				model,
+				{events: events}),
+			_1: A2(_elm_lang$http$Http$send, responseHandler, request)
+		};
+	});
 var _michaelmosher$zenoss_web$Zenoss$acknowledgeEvent = F2(
 	function (model, eventId) {
 		var events = A2(_michaelmosher$zenoss_web$Zenoss$changeEventState, model, eventId);
@@ -12502,6 +12542,22 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 				};
 			case 'AcknowledgeEvent':
 				return A2(_michaelmosher$zenoss_web$Zenoss$acknowledgeEvent, model, _p1._0);
+			case 'AcknowledgeResponse':
+				if (_p1._1.ctor === 'Ok') {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								events: A2(_michaelmosher$zenoss_web$Zenoss$changeEventState, model, _p1._0)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			case 'UnacknowledgeEvent':
+				return A2(_michaelmosher$zenoss_web$Zenoss$unacknowledgeEvent, model, _p1._0);
 			default:
 				if (_p1._1.ctor === 'Ok') {
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};

@@ -90,6 +90,15 @@ update msg model =
         AcknowledgeResponse eid (Err e) ->
             ({model | events = Zenoss.changeEventState model eid}, Cmd.none)
 
+        UnacknowledgeEvent eid ->
+            Zenoss.unacknowledgeEvent model eid
+
+        UnacknowledgeResponse eid (Ok e) ->
+            (model, Cmd.none)
+
+        UnacknowledgeResponse eid (Err e) ->
+            ({model | events = Zenoss.changeEventState model eid}, Cmd.none)
+
 
 view: Model -> Html Msg
 view model =

@@ -1,4 +1,4 @@
-module Zenoss.Http exposing (queryEvents, acknowledgeEvents)
+module Zenoss.Http exposing (queryEvents, acknowledgeEvents, unacknowledgeEvents)
 
 import Base64
 import Http
@@ -26,6 +26,13 @@ acknowledgeEvents auth eventId =
     let body = acknowledgeEventsData eventId |> eventsRequestBody "acknowledge"
     in
         eventsRequest auth body acknowledgeEventsDecoder
+
+unacknowledgeEvents: Auth -> String -> Http.Request Bool
+unacknowledgeEvents auth eventId =
+    let body = acknowledgeEventsData eventId |> eventsRequestBody "unacknowledge"
+    in
+        eventsRequest auth body acknowledgeEventsDecoder
+
 
 eventsRequest: Auth -> Http.Body -> Decode.Decoder a -> Http.Request a
 eventsRequest auth body decoder =

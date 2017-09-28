@@ -33,6 +33,19 @@ acknowledgeEvent model eventId =
     in
         ({model | events = events}, Http.send responseHandler request)
 
+unacknowledgeEvent:  Model -> String -> (Model, Cmd Msg)
+unacknowledgeEvent model eventId =
+    let responseHandler = Main.Model.UnacknowledgeResponse eventId
+        request = Zenoss.Http.unacknowledgeEvents {
+            hostname = model.hostname,
+            username = model.username,
+            password = model.password
+        } eventId
+        events = changeEventState model eventId -- optimistic update
+    in
+        ({model | events = events}, Http.send responseHandler request)
+
+
 changeEventState: Model -> String -> List Event
 changeEventState model eventId =
     List.map (\event ->

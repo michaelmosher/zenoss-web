@@ -78,17 +78,7 @@ renderDetailedEvent event =
             eventDetailField "first occurance" event.firstTime,
             eventDetailField "latest occurance" event.lastTime,
             eventDetailField "error output" event.stdErr,
-            p [
-                onClick (AcknowledgeEvent event.id),
-                style [
-                    ("background-color", "lightgrey"),
-                    ("border", "grey solid 1px"),
-                    ("border-radius", "10px"),
-                    ("font-weight", "bolder"),
-                    ("text-align", "center"),
-                    ("cursor", "pointer")
-                ]
-            ] [text "Acknowledge"]
+            renderStateChangeButton event.id event.eventState
         ]
 
 
@@ -160,6 +150,34 @@ renderEventState s =
         css = staticStyles ++ dynamicStyles |> style
     in
         div [css] [s |> eventStateString |> text]
+
+
+renderStateChangeButton: String -> EventState -> Html Msg
+renderStateChangeButton eventId state =
+    let
+        this = if state == New
+            then
+                {
+                    clickMsg = AcknowledgeEvent,
+                    buttonText = "Acknowledge"
+                }
+            else
+                {
+                    clickMsg = UnacknowledgeEvent,
+                    buttonText = "Un-acknowledge"
+                }
+    in
+        p [
+            onClick (this.clickMsg eventId),
+            style [
+                ("background-color", "lightgrey"),
+                ("border", "grey solid 1px"),
+                ("border-radius", "10px"),
+                ("font-weight", "bolder"),
+                ("text-align", "center"),
+                ("cursor", "pointer")
+            ]
+        ] [text this.buttonText]
 
 
 eventStateString: EventState -> String

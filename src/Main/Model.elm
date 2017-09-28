@@ -47,3 +47,5 @@ type Msg =
     | EventDetails String
     | AcknowledgeEvent String
     | AcknowledgeResponse String (Result Http.Error (Bool))
+    | UnacknowledgeEvent String
+    | UnacknowledgeResponse String (Result Http.Error (Bool))
