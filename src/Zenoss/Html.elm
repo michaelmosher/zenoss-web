@@ -114,7 +114,7 @@ renderEventDeviceName d =
             ("font-weight", "bolder"),
             ("flex-grow", "1"),
             ("word-break", "break-all"),
-            ("padding-right", "3px")
+            ("padding-right", "5px")
         ]
     in
         span [css] [text d]
@@ -181,7 +181,20 @@ severityShape s =
 eventDetailField: String -> String -> Html a
 eventDetailField key value =
     div [style [("display", "flex")]] [
-        span [style [("border-bottom", "lightgrey solid 1px"), ("font-weight", "bolder"), ("flex-grow", "1")]] [text key],
-        span [style [("border-bottom", "lightgrey solid 1px"), ("word-break", "break-all")]] [text value]
+        span [
+            style [
+                ("border-bottom",
+                "lightgrey solid 1px"),
+                ("font-weight", "bolder"),
+                ("flex-grow", "1"),
+                ("padding-right", "5px")
+            ]
+        ] [text key],
+        span [
+            style [
+                ("border-bottom", "lightgrey solid 1px"),
+                ("word-break", "break-all")
+            ]
+        ] [text value]
     ]
 
