@@ -47,7 +47,7 @@ subscriptions _ =
 route: Url.Parser (Page -> a) a
 route =
     Url.oneOf [
-        Url.map LoginPage Url.top,
+        Url.map EventsPage Url.top,
         Url.map EventsPage (Url.s "Events"),
         Url.map EventPage (Url.s "Event" </> Url.string)
     ]

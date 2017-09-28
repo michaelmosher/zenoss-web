@@ -12409,7 +12409,7 @@ var _michaelmosher$zenoss_web$Main$view = function (model) {
 var _michaelmosher$zenoss_web$Main$route = _evancz$url_parser$UrlParser$oneOf(
 	{
 		ctor: '::',
-		_0: A2(_evancz$url_parser$UrlParser$map, _michaelmosher$zenoss_web$Main_Model$LoginPage, _evancz$url_parser$UrlParser$top),
+		_0: A2(_evancz$url_parser$UrlParser$map, _michaelmosher$zenoss_web$Main_Model$EventsPage, _evancz$url_parser$UrlParser$top),
 		_1: {
 			ctor: '::',
 			_0: A2(
