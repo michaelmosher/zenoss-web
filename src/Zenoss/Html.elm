@@ -125,7 +125,7 @@ renderEventProdState p =
 
 renderEventSummary: String -> Html a
 renderEventSummary s =
-    p [] [text s]
+    p [style [("word-break", "break-all")]] [text s]
 
 
 renderEventCount: Int -> Html a
@@ -180,6 +180,6 @@ eventDetailField: String -> String -> Html a
 eventDetailField key value =
     div [style [("display", "flex")]] [
         span [style [("border-bottom", "lightgrey solid 1px"), ("font-weight", "bolder"), ("flex-grow", "1")]] [text key],
-        span [style [("border-bottom", "lightgrey solid 1px")]] [text value]
+        span [style [("border-bottom", "lightgrey solid 1px"), ("word-break", "break-all")]] [text value]
     ]
 

@@ -11658,7 +11658,11 @@ var _michaelmosher$zenoss_web$Zenoss_Html$eventDetailField = F2(
 								{
 									ctor: '::',
 									_0: {ctor: '_Tuple2', _0: 'border-bottom', _1: 'lightgrey solid 1px'},
-									_1: {ctor: '[]'}
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'word-break', _1: 'break-all'},
+										_1: {ctor: '[]'}
+									}
 								}),
 							_1: {ctor: '[]'}
 						},
@@ -11841,7 +11845,16 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEventCount = function (c) {
 var _michaelmosher$zenoss_web$Zenoss_Html$renderEventSummary = function (s) {
 	return A2(
 		_elm_lang$html$Html$p,
-		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'word-break', _1: 'break-all'},
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		},
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html$text(s),
