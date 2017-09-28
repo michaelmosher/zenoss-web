@@ -112,7 +112,9 @@ renderEventDeviceName: String -> Html a
 renderEventDeviceName d =
     let css = style [
             ("font-weight", "bolder"),
-            ("flex-grow", "1")
+            ("flex-grow", "1"),
+            ("word-break", "break-all"),
+            ("padding-right", "3px")
         ]
     in
         span [css] [text d]

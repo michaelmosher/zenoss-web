@@ -11879,7 +11879,15 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEventDeviceName = function (d) {
 			_1: {
 				ctor: '::',
 				_0: {ctor: '_Tuple2', _0: 'flex-grow', _1: '1'},
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'word-break', _1: 'break-all'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'padding-right', _1: '3px'},
+						_1: {ctor: '[]'}
+					}
+				}
 			}
 		});
 	return A2(
