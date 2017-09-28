@@ -12339,13 +12339,20 @@ var _michaelmosher$zenoss_web$Zenoss$unacknowledgeEvent = F2(
 			{hostname: model.hostname, username: model.username, password: model.password},
 			eventId);
 		var responseHandler = _michaelmosher$zenoss_web$Main_Model$UnacknowledgeResponse(eventId);
-		return {
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Native_Utils.update(
+		return A2(
+			_elm_lang$core$Platform_Cmd_ops['!'],
+			_elm_lang$core$Native_Utils.update(
 				model,
 				{events: events}),
-			_1: A2(_elm_lang$http$Http$send, responseHandler, request)
-		};
+			{
+				ctor: '::',
+				_0: _elm_lang$navigation$Navigation$newUrl('#Events'),
+				_1: {
+					ctor: '::',
+					_0: A2(_elm_lang$http$Http$send, responseHandler, request),
+					_1: {ctor: '[]'}
+				}
+			});
 	});
 var _michaelmosher$zenoss_web$Zenoss$acknowledgeEvent = F2(
 	function (model, eventId) {
@@ -12355,13 +12362,20 @@ var _michaelmosher$zenoss_web$Zenoss$acknowledgeEvent = F2(
 			{hostname: model.hostname, username: model.username, password: model.password},
 			eventId);
 		var responseHandler = _michaelmosher$zenoss_web$Main_Model$AcknowledgeResponse(eventId);
-		return {
-			ctor: '_Tuple2',
-			_0: _elm_lang$core$Native_Utils.update(
+		return A2(
+			_elm_lang$core$Platform_Cmd_ops['!'],
+			_elm_lang$core$Native_Utils.update(
 				model,
 				{events: events}),
-			_1: A2(_elm_lang$http$Http$send, responseHandler, request)
-		};
+			{
+				ctor: '::',
+				_0: _elm_lang$navigation$Navigation$newUrl('#Events'),
+				_1: {
+					ctor: '::',
+					_0: A2(_elm_lang$http$Http$send, responseHandler, request),
+					_1: {ctor: '[]'}
+				}
+			});
 	});
 var _michaelmosher$zenoss_web$Zenoss$refreshEvents = function (model) {
 	var request = _michaelmosher$zenoss_web$Zenoss_Http$queryEvents(

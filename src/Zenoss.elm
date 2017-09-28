@@ -2,6 +2,7 @@ module Zenoss exposing (..)
 
 import Html exposing (Html, div, h2, text)
 import Http
+import Navigation
 
 import Main.Model exposing (Model, Msg, Event, EventState(..))
 import Zenoss.Http
@@ -31,7 +32,11 @@ acknowledgeEvent model eventId =
         } eventId
         events = changeEventState model eventId -- optimistic update
     in
-        ({model | events = events}, Http.send responseHandler request)
+        {model | events = events}
+        ! [
+            Navigation.newUrl "#Events",
+            Http.send responseHandler request
+        ]
 
 unacknowledgeEvent:  Model -> String -> (Model, Cmd Msg)
 unacknowledgeEvent model eventId =
@@ -43,7 +48,11 @@ unacknowledgeEvent model eventId =
         } eventId
         events = changeEventState model eventId -- optimistic update
     in
-        ({model | events = events}, Http.send responseHandler request)
+        {model | events = events}
+        ! [
+            Navigation.newUrl "#Events",
+            Http.send responseHandler request
+        ]
 
 
 changeEventState: Model -> String -> List Event
