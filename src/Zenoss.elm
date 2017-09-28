@@ -8,7 +8,7 @@ import Zenoss.Http
 import Zenoss.Html
 
 -- function to handle FetchEvents Msg
-refreshEvents: Model -> (Model, Cmd Msg)
+refreshEvents: Model -> Cmd Msg
 refreshEvents model =
     let responseHandler = Main.Model.NewEvents
         request = Zenoss.Http.queryEvents {
@@ -17,7 +17,7 @@ refreshEvents model =
             password = model.password
         }
     in
-        (model, Http.send responseHandler request)
+        Http.send responseHandler request
 
 
 -- function to handle AcknowledgeEvent Msg

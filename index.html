@@ -1,48 +1,62 @@
 <html>
-    <head>
-        <title>Zenoss Web</title>
-        <meta name="author" content="Michael Mosher" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta charset="UTF-8" />
-        <meta name="theme-color" content="#001f3f" />
-        <link rel="manifest" href="./manifest.json" />
-        <script>
-            if('serviceWorker' in navigator) {
-                navigator.serviceWorker
+
+<head>
+    <title>Zenoss Web</title>
+    <meta name="author" content="Michael Mosher" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#001f3f" />
+    <link rel="manifest" href="./manifest.json" />
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker
                 .register('./sw.js')
-                .then(function() { console.log("Service Worker Registered"); });
-            }
-        </script>
-        <style>
-            .simple-event:first-child {
-                border-top-right-radius: 15px;
-                border-top-left-radius: 15px;
-            }
+                .then(function() {
+                    console.log("Service Worker Registered");
+                });
+        }
+    </script>
+    <style>
+        .simple-event:first-child {
+            border-top-right-radius: 15px;
+            border-top-left-radius: 15px;
+        }
+        
+        .simple-event:last-child {
+            border-bottom-right-radius: 15px;
+            border-bottom-left-radius: 15px;
+        }
+    </style>
+</head>
 
-            .simple-event:last-child {
-                border-bottom-right-radius: 15px;
-                border-bottom-left-radius: 15px;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="main">
-            <h1>Loading...</h1>
-            <p>Unless you have javascript disabled, in which case, it's just failing.</p>
-        </div>
-        <script src="./main.js"></script>
-        <script>
-            var node = document.getElementById('main');
-            var app = Elm.Main.embed(node);
+<body>
+    <div id="main">
+        <h1>Loading...</h1>
+        <p>Unless you have javascript disabled, in which case, it's just failing.</p>
+    </div>
+    <script src="./main.js"></script>
+    <script>
+        var node = document.getElementById('main');
 
-            app.ports.setSetting.subscribe(function(setting) {
-                localStorage.setItem(setting.key, setting.value)
+        var auth = {
+            hostname: localStorage.getItem('Zhostname') || '',
+            username: localStorage.getItem('Zusername') || '',
+            password: localStorage.getItem('Zpassword') || ''
+        }
+        var app = Elm.Main.embed(node, auth);
+
+        app.ports.setSetting.subscribe(function(setting) {
+            localStorage.setItem(setting.key, setting.value)
+        })
+
+        app.ports.getSetting.subscribe(function(key) {
+            var value = localStorage.getItem(key)
+            app.ports.newSetting.send({
+                key: key,
+                value: value
             })
+        })
+    </script>
+</body>
 
-            app.ports.getSetting.subscribe(function(key) {
-                var value = localStorage.getItem(key)
-                app.ports.newSetting.send({key: key, value: value})
-            })
-        </script>
-    </body>
 </html>

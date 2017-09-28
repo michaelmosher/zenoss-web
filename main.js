@@ -12367,11 +12367,7 @@ var _michaelmosher$zenoss_web$Zenoss$refreshEvents = function (model) {
 	var request = _michaelmosher$zenoss_web$Zenoss_Http$queryEvents(
 		{hostname: model.hostname, username: model.username, password: model.password});
 	var responseHandler = _michaelmosher$zenoss_web$Main_Model$NewEvents;
-	return {
-		ctor: '_Tuple2',
-		_0: model,
-		_1: A2(_elm_lang$http$Http$send, responseHandler, request)
-	};
+	return A2(_elm_lang$http$Http$send, responseHandler, request);
 };
 
 var _michaelmosher$zenoss_web$Main$view = function (model) {
@@ -12464,14 +12460,12 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'LoginMsg':
-				var cMsg = _elm_lang$core$Tuple$second(
-					A2(_michaelmosher$zenoss_web$Main$update, _michaelmosher$zenoss_web$Main_Model$FetchEvents, model));
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					model,
 					{
 						ctor: '::',
-						_0: cMsg,
+						_0: _michaelmosher$zenoss_web$Zenoss$refreshEvents(model),
 						_1: {
 							ctor: '::',
 							_0: _elm_lang$navigation$Navigation$newUrl('#Events'),
@@ -12503,7 +12497,11 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 						}
 					});
 			case 'FetchEvents':
-				return _michaelmosher$zenoss_web$Zenoss$refreshEvents(model);
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: _michaelmosher$zenoss_web$Zenoss$refreshEvents(model)
+				};
 			case 'NewEvents':
 				if (_p1._0.ctor === 'Ok') {
 					return {
@@ -12577,23 +12575,45 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 var _michaelmosher$zenoss_web$Main$subscriptions = function (_p2) {
 	return _michaelmosher$zenoss_web$LocalSettings$newSetting(_michaelmosher$zenoss_web$Main_Model$NewSetting);
 };
-var _michaelmosher$zenoss_web$Main$init = function (_p3) {
-	return {
-		ctor: '_Tuple2',
-		_0: A5(
+var _michaelmosher$zenoss_web$Main$init = F2(
+	function (auth, location) {
+		var loggedIn = (!_elm_lang$core$Native_Utils.eq(auth.hostname, '')) && ((!_elm_lang$core$Native_Utils.eq(auth.username, '')) && (!_elm_lang$core$Native_Utils.eq(auth.password, '')));
+		var initialPage = loggedIn ? A2(_evancz$url_parser$UrlParser$parseHash, _michaelmosher$zenoss_web$Main$route, location) : _elm_lang$core$Maybe$Just(_michaelmosher$zenoss_web$Main_Model$LoginPage);
+		var model = A5(
 			_michaelmosher$zenoss_web$Main_Model$Model,
-			_elm_lang$core$Maybe$Just(_michaelmosher$zenoss_web$Main_Model$LoginPage),
-			'',
-			'',
-			'',
-			{ctor: '[]'}),
-		_1: _michaelmosher$zenoss_web$LocalSettings$loadInitialSettings
-	};
-};
+			initialPage,
+			auth.hostname,
+			auth.username,
+			auth.password,
+			{ctor: '[]'});
+		var initialAction = loggedIn ? _michaelmosher$zenoss_web$Zenoss$refreshEvents(model) : _michaelmosher$zenoss_web$LocalSettings$loadInitialSettings;
+		return {ctor: '_Tuple2', _0: model, _1: initialAction};
+	});
 var _michaelmosher$zenoss_web$Main$main = A2(
-	_elm_lang$navigation$Navigation$program,
+	_elm_lang$navigation$Navigation$programWithFlags,
 	_michaelmosher$zenoss_web$Main_Model$UrlChange,
-	{init: _michaelmosher$zenoss_web$Main$init, view: _michaelmosher$zenoss_web$Main$view, update: _michaelmosher$zenoss_web$Main$update, subscriptions: _michaelmosher$zenoss_web$Main$subscriptions})();
+	{init: _michaelmosher$zenoss_web$Main$init, view: _michaelmosher$zenoss_web$Main$view, update: _michaelmosher$zenoss_web$Main$update, subscriptions: _michaelmosher$zenoss_web$Main$subscriptions})(
+	A2(
+		_elm_lang$core$Json_Decode$andThen,
+		function (hostname) {
+			return A2(
+				_elm_lang$core$Json_Decode$andThen,
+				function (password) {
+					return A2(
+						_elm_lang$core$Json_Decode$andThen,
+						function (username) {
+							return _elm_lang$core$Json_Decode$succeed(
+								{hostname: hostname, password: password, username: username});
+						},
+						A2(_elm_lang$core$Json_Decode$field, 'username', _elm_lang$core$Json_Decode$string));
+				},
+				A2(_elm_lang$core$Json_Decode$field, 'password', _elm_lang$core$Json_Decode$string));
+		},
+		A2(_elm_lang$core$Json_Decode$field, 'hostname', _elm_lang$core$Json_Decode$string)));
+var _michaelmosher$zenoss_web$Main$Auth = F3(
+	function (a, b, c) {
+		return {hostname: a, username: b, password: c};
+	});
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};

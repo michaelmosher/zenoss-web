@@ -7,21 +7,36 @@ import Login
 import Main.Model exposing (Msg(..), Model, Page(..), Setting)
 import Zenoss
 
-main : Program Never Model Msg
+type alias Auth = {
+    hostname: String,
+    username: String,
+    password: String
+}
+
+main: Program Auth Model Msg
 main =
-    Navigation.program UrlChange {
+    Navigation.programWithFlags UrlChange {
         init = init,
         view =  view,
         update =  update,
         subscriptions = subscriptions
     }
 
-init: Navigation.Location -> (Model, Cmd Msg)
-init _ =
-    (
-        Model (Just LoginPage) "" "" "" [],
-        LocalSettings.loadInitialSettings
-    )
+init: Auth -> Navigation.Location -> (Model, Cmd Msg)
+init auth location =
+    let
+        loggedIn = auth.hostname /= ""
+            && auth.username /= ""
+            && auth.password /= ""
+        initialPage = if loggedIn
+            then Url.parseHash route location
+            else Just LoginPage
+        model = Model initialPage auth.hostname auth.username auth.password []
+        initialAction = if loggedIn
+            then model |> Zenoss.refreshEvents
+            else LocalSettings.loadInitialSettings
+    in
+        (model, initialAction)
 
 
 subscriptions: Model -> Sub Msg
@@ -57,17 +72,16 @@ update msg model =
             ({model | password = p}, Cmd.none)
 
         LoginMsg ->
-          let cMsg = Tuple.second (update FetchEvents model)
-          in
-              model ! [
-                  cMsg, Navigation.newUrl "#Events",
-                  LocalSettings.setSetting {key = "Zhostname", value = Just model.hostname},
-                  LocalSettings.setSetting {key = "Zusername", value = Just model.username},
-                  LocalSettings.setSetting {key = "Zpassword", value = Just model.password}
-              ]
+          model ! [
+                Zenoss.refreshEvents model,
+                Navigation.newUrl "#Events",
+                LocalSettings.setSetting {key = "Zhostname", value = Just model.hostname},
+                LocalSettings.setSetting {key = "Zusername", value = Just model.username},
+                LocalSettings.setSetting {key = "Zpassword", value = Just model.password}
+            ]
 
         FetchEvents ->
-            Zenoss.refreshEvents model
+            (model, Zenoss.refreshEvents model)
 
         NewEvents (Ok e) ->
             ({model | events = e}, Cmd.none)
