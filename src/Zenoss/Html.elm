@@ -225,6 +225,6 @@ breakLongWords summary =
     String.words summary
         |> List.map (\word ->
             if String.length word > 20
-            then span [style [("word-break", "break-all")]] [word ++ " " |> text]
+            then span [style [("font-weight", "bold"), ("word-break", "break-all")]] [word ++ " " |> text]
             else word ++ " " |> text
         )
