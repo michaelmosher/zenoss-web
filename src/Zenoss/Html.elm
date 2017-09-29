@@ -100,11 +100,14 @@ renderEventSeverity s =
 
 renderEventDeviceName: String -> Html a
 renderEventDeviceName d =
-    let css = style [
+    let wordBreak = if String.length d > 20
+            then "break-all"
+            else "inherit"
+        css = style [
             ("font-weight", "bolder"),
             ("flex-grow", "1"),
-            ("word-break", "break-all"),
-            ("padding-right", "5px")
+            ("padding-right", "5px"),
+            ("word-break", wordBreak)
         ]
     in
         span [css] [text d]
@@ -117,7 +120,7 @@ renderEventProdState p =
 
 renderEventSummary: String -> Html a
 renderEventSummary s =
-    p [style [("word-break", "break-all")]] [text s]
+    p [] (breakLongWords s)
 
 
 renderEventCount: Int -> Html a
@@ -216,3 +219,12 @@ eventDetailField key value =
         ] [text value]
     ]
 
+
+breakLongWords: String -> List (Html.Html a)
+breakLongWords summary =
+    String.words summary
+        |> List.map (\word ->
+            if String.length word > 20
+            then span [style [("word-break", "break-all")]] [word ++ " " |> text]
+            else word ++ " " |> text
+        )

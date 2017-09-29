@@ -11622,6 +11622,34 @@ var _michaelmosher$zenoss_web$Zenoss_Http$Auth = F3(
 		return {hostname: a, username: b, password: c};
 	});
 
+var _michaelmosher$zenoss_web$Zenoss_Html$breakLongWords = function (summary) {
+	return A2(
+		_elm_lang$core$List$map,
+		function (word) {
+			return (_elm_lang$core$Native_Utils.cmp(
+				_elm_lang$core$String$length(word),
+				20) > 0) ? A2(
+				_elm_lang$html$Html$span,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$style(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'word-break', _1: 'break-all'},
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(
+						A2(_elm_lang$core$Basics_ops['++'], word, ' ')),
+					_1: {ctor: '[]'}
+				}) : _elm_lang$html$Html$text(
+				A2(_elm_lang$core$Basics_ops['++'], word, ' '));
+		},
+		_elm_lang$core$String$words(summary));
+};
 var _michaelmosher$zenoss_web$Zenoss_Html$eventDetailField = F2(
 	function (key, value) {
 		return A2(
@@ -11910,21 +11938,8 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEventCount = function (c) {
 var _michaelmosher$zenoss_web$Zenoss_Html$renderEventSummary = function (s) {
 	return A2(
 		_elm_lang$html$Html$p,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'word-break', _1: 'break-all'},
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text(s),
-			_1: {ctor: '[]'}
-		});
+		{ctor: '[]'},
+		_michaelmosher$zenoss_web$Zenoss_Html$breakLongWords(s));
 };
 var _michaelmosher$zenoss_web$Zenoss_Html$renderEventProdState = function (p) {
 	return A2(
@@ -11937,6 +11952,9 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEventProdState = function (p) {
 		});
 };
 var _michaelmosher$zenoss_web$Zenoss_Html$renderEventDeviceName = function (d) {
+	var wordBreak = (_elm_lang$core$Native_Utils.cmp(
+		_elm_lang$core$String$length(d),
+		20) > 0) ? 'break-all' : 'inherit';
 	var css = _elm_lang$html$Html_Attributes$style(
 		{
 			ctor: '::',
@@ -11946,10 +11964,10 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEventDeviceName = function (d) {
 				_0: {ctor: '_Tuple2', _0: 'flex-grow', _1: '1'},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'word-break', _1: 'break-all'},
+					_0: {ctor: '_Tuple2', _0: 'padding-right', _1: '5px'},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'padding-right', _1: '5px'},
+						_0: {ctor: '_Tuple2', _0: 'word-break', _1: wordBreak},
 						_1: {ctor: '[]'}
 					}
 				}
