@@ -11635,12 +11635,8 @@ var _michaelmosher$zenoss_web$Zenoss_Html$breakLongWords = function (summary) {
 					_0: _elm_lang$html$Html_Attributes$style(
 						{
 							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'font-weight', _1: 'bold'},
-							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'word-break', _1: 'break-all'},
-								_1: {ctor: '[]'}
-							}
+							_0: {ctor: '_Tuple2', _0: 'word-break', _1: 'break-all'},
+							_1: {ctor: '[]'}
 						}),
 					_1: {ctor: '[]'}
 				},
