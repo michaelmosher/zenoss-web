@@ -27,6 +27,13 @@ type alias Event = {
     stdErr: String
 }
 
+type alias Device = {
+    uid: String,
+    name: String,
+    prodState: String,
+    ipAddress: String
+}
+
 type alias Model = {
     currentPage : Maybe Page,
     hostname: String,

@@ -6,7 +6,7 @@ import Json.Decode as Decode
 import Json.Decode.Pipeline exposing (decode, optionalAt, required, requiredAt)
 import Json.Encode as Json
 
-import Main.Model exposing (Event, EventState(..))
+import Main.Model exposing (Device, Event, EventState(..))
 
 type alias Auth = {
     hostname: String,
@@ -18,24 +18,41 @@ queryEvents: Auth -> Http.Request (List Event)
 queryEvents auth =
     let body = eventsRequestBody "query" queryEventData
     in
-        eventsRequest auth body queryEventsDecoder
+        eventRequest auth body queryEventsDecoder
 
 
 acknowledgeEvents: Auth -> String -> Http.Request Bool
 acknowledgeEvents auth eventId =
     let body = acknowledgeEventsData eventId |> eventsRequestBody "acknowledge"
     in
-        eventsRequest auth body acknowledgeEventsDecoder
+        eventRequest auth body acknowledgeEventsDecoder
 
 unacknowledgeEvents: Auth -> String -> Http.Request Bool
 unacknowledgeEvents auth eventId =
     let body = acknowledgeEventsData eventId |> eventsRequestBody "unacknowledge"
     in
-        eventsRequest auth body acknowledgeEventsDecoder
+        eventRequest auth body acknowledgeEventsDecoder
 
 
-eventsRequest: Auth -> Http.Body -> Decode.Decoder a -> Http.Request a
-eventsRequest auth body decoder =
+getDevices: Auth -> Http.Request (List Device)
+getDevices auth =
+    let body = deviceRequestBody "getDevice" getDeviceData
+    in
+        deviceRequest auth body getDevicesDecoder
+
+
+eventRequest: Auth -> Http.Body -> Decode.Decoder a -> Http.Request a
+eventRequest =
+    apiRequest "evconsole_router"
+
+
+deviceRequest: Auth -> Http.Body -> Decode.Decoder a -> Http.Request a
+deviceRequest =
+    apiRequest "device_router"
+
+
+apiRequest: String -> Auth -> Http.Body -> Decode.Decoder a -> Http.Request a
+apiRequest router auth body decoder =
     let username = auth.username
         password = auth.password
         authString = "Basic " ++ Base64.encode(username ++ ":" ++ password)
@@ -44,7 +61,7 @@ eventsRequest auth body decoder =
         headers = [
             Http.header "Authorization" authString
         ],
-        url = "https://" ++ auth.hostname ++ "/zport/dmd/evconsole_router",
+        url = "https://" ++ auth.hostname ++ "/zport/dmd/" ++ router,
         body = body,
         expect = Http.expectJson decoder,
         timeout = Nothing,
@@ -87,10 +104,35 @@ acknowledgeEventsData eventId =
     ]
 
 
+getDeviceData: Json.Value
+getDeviceData =
+    Json.list [
+        Json.object [
+            ("keys", Json.list [
+                    Json.string "uid",
+                    Json.string "name",
+                    Json.string "prodState",
+                    Json.string "ipAddressString"
+            ]),
+            ("uid", Json.string "/zport/dmd/Server")
+        ]
+    ]
+
+
 eventsRequestBody: String -> Json.Value -> Http.Body
-eventsRequestBody method data =
+eventsRequestBody =
+    apiRequestBody "EventsRouter"
+
+
+deviceRequestBody: String -> Json.Value -> Http.Body
+deviceRequestBody = 
+    apiRequestBody "DeviceRouter"
+
+
+apiRequestBody: String -> String -> Json.Value -> Http.Body
+apiRequestBody action method data =
     Json.object [
-        ("action", Json.string "EventsRouter"),
+        ("action", Json.string action),
         ("method", Json.string method),
         ("tid", Json.int 1),
         ("data", data)
@@ -155,3 +197,31 @@ stderrDecoder =
         Decode.succeed (List.foldr (++) "" l)
     )
 
+
+getDevicesDecoder: Decode.Decoder (List Device)
+getDevicesDecoder =
+    Decode.field "result"
+        (Decode.field "devices"
+            (Decode.list deviceDecoder)
+        )
+
+deviceDecoder: Decode.Decoder Device
+deviceDecoder =
+    decode Device
+        |> required "uid" Decode.string
+        |> required "name" Decode.string
+        |> required "prodState" deviceProdStateDecoder
+        |> required "ipAddressString" Decode.string
+
+
+deviceProdStateDecoder: Decode.Decoder String
+deviceProdStateDecoder =
+    Decode.int |> Decode.andThen (\int ->
+            case int of
+                1000 -> Decode.succeed "Production"
+                500 -> Decode.succeed "Pre-Production"
+                400 -> Decode.succeed "Test"
+                300 -> Decode.succeed "Maintenance"
+                (-1) -> Decode.succeed "Decommissioned"
+                c -> Decode.succeed <| "Custom: " ++ (toString c)
+        )
