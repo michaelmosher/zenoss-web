@@ -32,7 +32,7 @@ init auth location =
         initialPage = if loggedIn
             then Url.parseHash route location
             else Just LoginPage
-        model = Model initialPage auth.hostname auth.username auth.password []
+        model = Model initialPage auth.hostname auth.username auth.password [] []
         initialAction = if loggedIn
             then model |> Zenoss.refreshEvents
             else LocalSettings.loadInitialSettings
@@ -49,6 +49,7 @@ route: Url.Parser (Page -> a) a
 route =
     Url.oneOf [
         Url.map EventsPage Url.top,
+        Url.map DevicesPage (Url.s "Devices"),
         Url.map EventsPage (Url.s "Events"),
         Url.map EventPage (Url.s "Event" </> Url.string)
     ]
@@ -117,12 +118,30 @@ update msg model =
         UnacknowledgeResponse eid (Err e) ->
             ({model | events = Zenoss.changeEventState model eid}, Cmd.none)
 
+        RefreshDevices ->
+            model ! [
+                Navigation.newUrl "#Devices",
+                Zenoss.refreshDevices model
+            ]
+
+        NewDevices (Ok d) ->
+            ({model | devices = d}, Cmd.none)
+
+        NewDevices (Err e) ->
+            let loginFailed = "Failed to connect to Zenoss server: " ++ toString e
+                    |> Zenoss.errorEvent
+            in
+                ({model | events = [loginFailed]}, Navigation.newUrl "#Events")
+
 
 view: Model -> Html Msg
 view model =
     case model.currentPage of
         Just LoginPage ->
             Login.pageView model
+
+        Just DevicesPage ->
+            Main.Html.overlay [Zenoss.devicesView model] model.currentPage
 
         Just EventsPage ->
             Main.Html.overlay [Zenoss.eventsView model] model.currentPage

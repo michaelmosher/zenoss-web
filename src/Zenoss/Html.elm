@@ -1,4 +1,4 @@
-module Zenoss.Html exposing (renderEventList, renderEventDetails)
+module Zenoss.Html exposing (renderDeviceList, renderEventList, renderEventDetails)
 
 import Char
 import Html exposing (Html, div, span, p, button, text)
@@ -6,7 +6,27 @@ import Html.Attributes exposing (class, style)
 import Html.Events exposing (onClick)
 import Svg
 import Svg.Attributes exposing (points, fill, cx, cy, r)
-import Main.Model exposing (Event, EventState(..), Msg(..))
+import Main.Model exposing (Device, Event, EventState(..), Msg(..))
+
+renderDeviceList: List Device -> Html Msg
+renderDeviceList devices =
+    -- should this be hardcoded? No. Do I care...?
+    let devicesToCareAbout = List.filter (\d -> d.prodState /= "Decommissioned") devices
+    in
+        div [] (List.map renderDeviceSummary devicesToCareAbout)
+
+
+renderDeviceSummary: Device -> Html Msg
+renderDeviceSummary d =
+    let css = [
+        ("border-bottom", "solid black 2px")
+    ]
+    in
+        div [style css] [
+            eventDetailField "Name" d.name,
+            eventDetailField "State" d.prodState,
+            eventDetailField "IP" d.ipAddress
+        ]
 
 renderEventList: List Event -> Html Msg
 renderEventList events =

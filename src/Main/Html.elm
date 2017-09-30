@@ -69,12 +69,13 @@ eventsButton =
 
 devicesButton: Html Msg
 devicesButton =
-    div [sharedButtonStyle] [text "Devices"]
+    div [sharedButtonStyle, onClick RefreshDevices] [text "Devices"]
 
 
 refreshButton: Maybe Page -> Html Msg
 refreshButton page =
     let refreshAction = case page of
+            Just DevicesPage -> Just RefreshDevices
             Just EventsPage -> Just RefreshEvents
             Just (EventPage _) -> Just RefreshEvents
             _ -> Nothing

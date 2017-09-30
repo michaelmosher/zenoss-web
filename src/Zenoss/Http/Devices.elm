@@ -2,14 +2,14 @@ module Zenoss.Http.Devices exposing (get)
 
 import Http
 import Json.Decode as Decode
-import Json.Decode.Pipeline exposing (decode, optionalAt, required, requiredAt)
+import Json.Decode.Pipeline exposing (decode, optional, required)
 import Json.Encode as Json
 import Main.Model exposing (Device)
 import Zenoss.Http.Shared exposing (Auth, apiRequest, apiRequestBody)
 
 get: Auth -> Http.Request (List Device)
 get auth =
-    let body = deviceRequestBody "getDevice" getData
+    let body = deviceRequestBody "getDevices" getData
     in
         deviceRequest auth body getDecoder
 
@@ -31,10 +31,10 @@ getData =
             ("keys", Json.list [
                     Json.string "uid",
                     Json.string "name",
-                    Json.string "prodState",
+                    Json.string "productionState",
                     Json.string "ipAddressString"
             ]),
-            ("uid", Json.string "/zport/dmd/Server")
+            ("uid", Json.string "/zport/dmd/Devices/Server")
         ]
     ]
 
@@ -51,8 +51,8 @@ deviceDecoder =
     decode Device
         |> required "uid" Decode.string
         |> required "name" Decode.string
-        |> required "prodState" deviceProdStateDecoder
-        |> required "ipAddressString" Decode.string
+        |> required "productionState" deviceProdStateDecoder
+        |> optional "ipAddressString" Decode.string "unknown"
 
 
 deviceProdStateDecoder: Decode.Decoder String

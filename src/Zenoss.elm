@@ -5,8 +5,20 @@ import Http
 import Navigation
 
 import Main.Model exposing (Model, Msg, Event, EventState(..))
+import Zenoss.Http.Devices as ZenossDevices
 import Zenoss.Http.Events as ZenossEvents
 import Zenoss.Html
+
+-- function to handle RefreshDevices Msg
+refreshDevices: Model -> Cmd Msg
+refreshDevices model =
+    let responseHandler = Main.Model.NewDevices
+        request = ZenossDevices.get {
+            hostname = model.hostname,
+            username = model.username,
+            password = model.password
+        }
+    in Http.send responseHandler request
 
 -- function to handle RefreshEvents Msg
 refreshEvents: Model -> Cmd Msg
@@ -54,7 +66,6 @@ unacknowledgeEvent model eventId =
             Http.send responseHandler request
         ]
 
-
 changeEventState: Model -> String -> List Event
 changeEventState model eventId =
     List.map (\event ->
@@ -65,6 +76,15 @@ changeEventState model eventId =
                     Acknowledged -> {event | eventState = New}
             else event
     ) model.events
+
+
+-- function to handle DevicesPage View
+devicesView: Model -> Html Msg
+devicesView model =
+    div [] [
+        Zenoss.Html.renderDeviceList model.devices
+    ]
+
 
 -- function to handle EventsPage View
 eventsView: Model -> Html Msg
