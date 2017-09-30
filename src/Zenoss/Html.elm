@@ -24,6 +24,7 @@ renderDeviceSummary d =
     in
         div [style css] [
             eventDetailField "Name" d.name,
+            eventDetailField "Device Class" d.deviceClass,
             eventDetailField "State" d.prodState,
             eventDetailField "IP" d.ipAddress
         ]

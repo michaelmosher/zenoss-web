@@ -30,6 +30,7 @@ type alias Event = {
 type alias Device = {
     uid: String,
     name: String,
+    deviceClass: String,
     prodState: String,
     ipAddress: String
 }

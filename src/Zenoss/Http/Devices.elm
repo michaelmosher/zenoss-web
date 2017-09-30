@@ -2,7 +2,7 @@ module Zenoss.Http.Devices exposing (get)
 
 import Http
 import Json.Decode as Decode
-import Json.Decode.Pipeline exposing (decode, optional, required)
+import Json.Decode.Pipeline exposing (decode, optional, required, requiredAt)
 import Json.Encode as Json
 import Main.Model exposing (Device)
 import Zenoss.Http.Shared exposing (Auth, apiRequest, apiRequestBody)
@@ -31,6 +31,7 @@ getData =
             ("keys", Json.list [
                     Json.string "uid",
                     Json.string "name",
+                    Json.string "deviceClass",
                     Json.string "productionState",
                     Json.string "ipAddressString"
             ]),
@@ -51,6 +52,7 @@ deviceDecoder =
     decode Device
         |> required "uid" Decode.string
         |> required "name" Decode.string
+        |> requiredAt ["deviceClass", "name"] Decode.string
         |> required "productionState" deviceProdStateDecoder
         |> optional "ipAddressString" Decode.string "unknown"
 

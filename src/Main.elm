@@ -33,9 +33,10 @@ init auth location =
             then Url.parseHash route location
             else Just LoginPage
         model = Model initialPage auth.hostname auth.username auth.password [] []
-        initialAction = if loggedIn
-            then model |> Zenoss.refreshEvents
-            else LocalSettings.loadInitialSettings
+        initialAction = case initialPage of
+            Just LoginPage -> LocalSettings.loadInitialSettings
+            Just DevicesPage -> model |> Zenoss.refreshDevices
+            _ -> model |> Zenoss.refreshEvents
     in
         (model, initialAction)
 

@@ -10485,9 +10485,9 @@ var _michaelmosher$zenoss_web$Main_Model$Event = function (a) {
 		};
 	};
 };
-var _michaelmosher$zenoss_web$Main_Model$Device = F4(
-	function (a, b, c, d) {
-		return {uid: a, name: b, prodState: c, ipAddress: d};
+var _michaelmosher$zenoss_web$Main_Model$Device = F5(
+	function (a, b, c, d, e) {
+		return {uid: a, name: b, deviceClass: c, prodState: d, ipAddress: e};
 	});
 var _michaelmosher$zenoss_web$Main_Model$Model = F6(
 	function (a, b, c, d, e, f) {
@@ -11692,14 +11692,26 @@ var _michaelmosher$zenoss_web$Zenoss_Http_Devices$deviceDecoder = A4(
 		'productionState',
 		_michaelmosher$zenoss_web$Zenoss_Http_Devices$deviceProdStateDecoder,
 		A3(
-			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-			'name',
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$requiredAt,
+			{
+				ctor: '::',
+				_0: 'deviceClass',
+				_1: {
+					ctor: '::',
+					_0: 'name',
+					_1: {ctor: '[]'}
+				}
+			},
 			_elm_lang$core$Json_Decode$string,
 			A3(
 				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-				'uid',
+				'name',
 				_elm_lang$core$Json_Decode$string,
-				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_michaelmosher$zenoss_web$Main_Model$Device)))));
+				A3(
+					_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+					'uid',
+					_elm_lang$core$Json_Decode$string,
+					_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_michaelmosher$zenoss_web$Main_Model$Device))))));
 var _michaelmosher$zenoss_web$Zenoss_Http_Devices$getDecoder = A2(
 	_elm_lang$core$Json_Decode$field,
 	'result',
@@ -11725,11 +11737,15 @@ var _michaelmosher$zenoss_web$Zenoss_Http_Devices$getData = _elm_lang$core$Json_
 								_0: _elm_lang$core$Json_Encode$string('name'),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$core$Json_Encode$string('productionState'),
+									_0: _elm_lang$core$Json_Encode$string('deviceClass'),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$core$Json_Encode$string('ipAddressString'),
-										_1: {ctor: '[]'}
+										_0: _elm_lang$core$Json_Encode$string('productionState'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$core$Json_Encode$string('ipAddressString'),
+											_1: {ctor: '[]'}
+										}
 									}
 								}
 							}
@@ -12677,11 +12693,15 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderDeviceSummary = function (d) {
 			_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$eventDetailField, 'Name', d.name),
 			_1: {
 				ctor: '::',
-				_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$eventDetailField, 'State', d.prodState),
+				_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$eventDetailField, 'Device Class', d.deviceClass),
 				_1: {
 					ctor: '::',
-					_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$eventDetailField, 'IP', d.ipAddress),
-					_1: {ctor: '[]'}
+					_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$eventDetailField, 'State', d.prodState),
+					_1: {
+						ctor: '::',
+						_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$eventDetailField, 'IP', d.ipAddress),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		});
@@ -13114,7 +13134,25 @@ var _michaelmosher$zenoss_web$Main$init = F2(
 			auth.password,
 			{ctor: '[]'},
 			{ctor: '[]'});
-		var initialAction = loggedIn ? _michaelmosher$zenoss_web$Zenoss$refreshEvents(model) : _michaelmosher$zenoss_web$LocalSettings$loadInitialSettings;
+		var initialAction = function () {
+			var _p3 = initialPage;
+			_v2_2:
+			do {
+				if (_p3.ctor === 'Just') {
+					switch (_p3._0.ctor) {
+						case 'LoginPage':
+							return _michaelmosher$zenoss_web$LocalSettings$loadInitialSettings;
+						case 'DevicesPage':
+							return _michaelmosher$zenoss_web$Zenoss$refreshDevices(model);
+						default:
+							break _v2_2;
+					}
+				} else {
+					break _v2_2;
+				}
+			} while(false);
+			return _michaelmosher$zenoss_web$Zenoss$refreshEvents(model);
+		}();
 		return {ctor: '_Tuple2', _0: model, _1: initialAction};
 	});
 var _michaelmosher$zenoss_web$Main$main = A2(
