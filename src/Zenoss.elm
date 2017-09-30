@@ -70,7 +70,6 @@ changeEventState model eventId =
 eventsView: Model -> Html Msg
 eventsView model =
     div [] [
-        h2 [] [text "Events!"],
         Zenoss.Html.renderEventList model.events
     ]
 
@@ -79,7 +78,6 @@ eventsView model =
 eventDetailView: Model -> String -> Html Msg
 eventDetailView model eid =
     div [] [
-        h2 [] [text "One Event!"],
         Zenoss.Html.renderEventDetails model.events eid
     ]
 

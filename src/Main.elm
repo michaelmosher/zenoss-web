@@ -4,6 +4,7 @@ import UrlParser as Url exposing ((</>))
 
 import LocalSettings
 import Login
+import Main.Html
 import Main.Model exposing (Msg(..), Model, Page(..), Setting)
 import Zenoss
 
@@ -121,10 +122,10 @@ view model =
             Login.pageView model
 
         Just EventsPage ->
-            Zenoss.eventsView model
+            [Zenoss.eventsView model] |> Main.Html.overlay
 
         Just (EventPage eid) ->
-            Zenoss.eventDetailView model eid
+            [Zenoss.eventDetailView model eid] |> Main.Html.overlay
 
         Nothing ->
             h2 [] [text "ERRORS!"]

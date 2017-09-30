@@ -10,12 +10,7 @@ import Main.Model exposing (Event, EventState(..), Msg(..))
 
 renderEventList: List Event -> Html Msg
 renderEventList events =
-    let listCss = style [
-            ("border", "solid 5px black"),
-            ("border-radius", "20px")
-        ]
-    in
-        div [listCss] (List.map renderSimpleEvent events)
+    div [] (List.map renderSimpleEvent events)
 
 
 renderEventDetails: List Event -> String -> Html Msg
@@ -68,7 +63,7 @@ renderDetailedEvent event =
             Nothing -> "Not ack'd"
             Just o -> "Ack'd by " ++ o
     in
-        div [class "detailed-event"] [
+        div [class "detailed-event", style [("padding", "10px")]] [
             eventDetailField "device" event.deviceName,
             eventDetailField "component" component,
             eventDetailField "summary" event.summary,

@@ -10781,6 +10781,205 @@ var _michaelmosher$zenoss_web$Login$pageView = function (model) {
 		});
 };
 
+var _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle = _elm_lang$html$Html_Attributes$style(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'flex', _1: '1 1 0'},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#001f3f'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'height', _1: '30px'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'line-height', _1: '30px'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'font-weight', _1: 'bold'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'font-size', _1: '1.2em'},
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	});
+var _michaelmosher$zenoss_web$Main_Html$refreshButton = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle,
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Refresh'),
+		_1: {ctor: '[]'}
+	});
+var _michaelmosher$zenoss_web$Main_Html$devicesButton = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle,
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Devices'),
+		_1: {ctor: '[]'}
+	});
+var _michaelmosher$zenoss_web$Main_Html$eventsButton = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle,
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Events'),
+		_1: {ctor: '[]'}
+	});
+var _michaelmosher$zenoss_web$Main_Html$dashboardButton = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle,
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Dashboard'),
+		_1: {ctor: '[]'}
+	});
+var _michaelmosher$zenoss_web$Main_Html$footer = function () {
+	var css = _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'position', _1: 'fixed'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'bottom', _1: '0'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'width', _1: '100%'},
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: css,
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _michaelmosher$zenoss_web$Main_Html$refreshButton,
+			_1: {ctor: '[]'}
+		});
+}();
+var _michaelmosher$zenoss_web$Main_Html$header = function () {
+	var css = _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
+				_1: {ctor: '[]'}
+			}
+		});
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: css,
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _michaelmosher$zenoss_web$Main_Html$dashboardButton,
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('|'),
+				_1: {
+					ctor: '::',
+					_0: _michaelmosher$zenoss_web$Main_Html$eventsButton,
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('|'),
+						_1: {
+							ctor: '::',
+							_0: _michaelmosher$zenoss_web$Main_Html$devicesButton,
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
+}();
+var _michaelmosher$zenoss_web$Main_Html$overlay = function (children) {
+	var css = _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'width', _1: '100%'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'height', _1: '100%'},
+				_1: {ctor: '[]'}
+			}
+		});
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: css,
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _michaelmosher$zenoss_web$Main_Html$header,
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$style(
+							{
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'padding', _1: '10px 0'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'margin-bottom', _1: '20px'},
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {ctor: '[]'}
+					},
+					children),
+				_1: {
+					ctor: '::',
+					_0: _michaelmosher$zenoss_web$Main_Html$footer,
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+
 var _truqu$elm_base64$Base64_Decode$charToInt = function ($char) {
 	var _p0 = $char;
 	switch (_p0.valueOf()) {
@@ -12056,7 +12255,16 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderDetailedEvent = function (event)
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html_Attributes$class('detailed-event'),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$style(
+					{
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'padding', _1: '10px'},
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
 		},
 		{
 			ctor: '::',
@@ -12257,23 +12465,9 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEventDetails = F2(
 		}
 	});
 var _michaelmosher$zenoss_web$Zenoss_Html$renderEventList = function (events) {
-	var listCss = _elm_lang$html$Html_Attributes$style(
-		{
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'border', _1: 'solid 5px black'},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'border-radius', _1: '20px'},
-				_1: {ctor: '[]'}
-			}
-		});
 	return A2(
 		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: listCss,
-			_1: {ctor: '[]'}
-		},
+		{ctor: '[]'},
 		A2(_elm_lang$core$List$map, _michaelmosher$zenoss_web$Zenoss_Html$renderSimpleEvent, events));
 };
 
@@ -12291,19 +12485,8 @@ var _michaelmosher$zenoss_web$Zenoss$eventDetailView = F2(
 			{ctor: '[]'},
 			{
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$h2,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('One Event!'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$renderEventDetails, model.events, eid),
-					_1: {ctor: '[]'}
-				}
+				_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$renderEventDetails, model.events, eid),
+				_1: {ctor: '[]'}
 			});
 	});
 var _michaelmosher$zenoss_web$Zenoss$eventsView = function (model) {
@@ -12312,19 +12495,8 @@ var _michaelmosher$zenoss_web$Zenoss$eventsView = function (model) {
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$h2,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Events!'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: _michaelmosher$zenoss_web$Zenoss_Html$renderEventList(model.events),
-				_1: {ctor: '[]'}
-			}
+			_0: _michaelmosher$zenoss_web$Zenoss_Html$renderEventList(model.events),
+			_1: {ctor: '[]'}
 		});
 };
 var _michaelmosher$zenoss_web$Zenoss$changeEventState = F2(
@@ -12409,9 +12581,19 @@ var _michaelmosher$zenoss_web$Main$view = function (model) {
 			case 'LoginPage':
 				return _michaelmosher$zenoss_web$Login$pageView(model);
 			case 'EventsPage':
-				return _michaelmosher$zenoss_web$Zenoss$eventsView(model);
+				return _michaelmosher$zenoss_web$Main_Html$overlay(
+					{
+						ctor: '::',
+						_0: _michaelmosher$zenoss_web$Zenoss$eventsView(model),
+						_1: {ctor: '[]'}
+					});
 			default:
-				return A2(_michaelmosher$zenoss_web$Zenoss$eventDetailView, model, _p0._0._0);
+				return _michaelmosher$zenoss_web$Main_Html$overlay(
+					{
+						ctor: '::',
+						_0: A2(_michaelmosher$zenoss_web$Zenoss$eventDetailView, model, _p0._0._0),
+						_1: {ctor: '[]'}
+					});
 		}
 	} else {
 		return A2(
