@@ -10485,6 +10485,10 @@ var _michaelmosher$zenoss_web$Main_Model$Event = function (a) {
 		};
 	};
 };
+var _michaelmosher$zenoss_web$Main_Model$Device = F4(
+	function (a, b, c, d) {
+		return {uid: a, name: b, prodState: c, ipAddress: d};
+	});
 var _michaelmosher$zenoss_web$Main_Model$Model = F5(
 	function (a, b, c, d, e) {
 		return {currentPage: a, hostname: b, username: c, password: d, events: e};
@@ -11571,7 +11575,79 @@ var _truqu$elm_base64$Base64_Encode$encode = function (input) {
 var _truqu$elm_base64$Base64$decode = _truqu$elm_base64$Base64_Decode$decode;
 var _truqu$elm_base64$Base64$encode = _truqu$elm_base64$Base64_Encode$encode;
 
-var _michaelmosher$zenoss_web$Zenoss_Http$stderrDecoder = A2(
+var _michaelmosher$zenoss_web$Zenoss_Http_Shared$apiRequestBody = F3(
+	function (action, method, data) {
+		return _elm_lang$http$Http$jsonBody(
+			_elm_lang$core$Json_Encode$object(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'action',
+						_1: _elm_lang$core$Json_Encode$string(action)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'method',
+							_1: _elm_lang$core$Json_Encode$string(method)
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'tid',
+								_1: _elm_lang$core$Json_Encode$int(1)
+							},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'data', _1: data},
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}));
+	});
+var _michaelmosher$zenoss_web$Zenoss_Http_Shared$apiRequest = F4(
+	function (router, auth, body, decoder) {
+		var password = auth.password;
+		var username = auth.username;
+		var authString = A2(
+			_elm_lang$core$Basics_ops['++'],
+			'Basic ',
+			_truqu$elm_base64$Base64$encode(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					username,
+					A2(_elm_lang$core$Basics_ops['++'], ':', password))));
+		return _elm_lang$http$Http$request(
+			{
+				method: 'POST',
+				headers: {
+					ctor: '::',
+					_0: A2(_elm_lang$http$Http$header, 'Authorization', authString),
+					_1: {ctor: '[]'}
+				},
+				url: A2(
+					_elm_lang$core$Basics_ops['++'],
+					'https://',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						auth.hostname,
+						A2(_elm_lang$core$Basics_ops['++'], '/zport/dmd/', router))),
+				body: body,
+				expect: _elm_lang$http$Http$expectJson(decoder),
+				timeout: _elm_lang$core$Maybe$Nothing,
+				withCredentials: false
+			});
+	});
+var _michaelmosher$zenoss_web$Zenoss_Http_Shared$Auth = F3(
+	function (a, b, c) {
+		return {hostname: a, username: b, password: c};
+	});
+
+var _michaelmosher$zenoss_web$Zenoss_Http_Events$stderrDecoder = A2(
 	_elm_lang$core$Json_Decode$andThen,
 	function (l) {
 		return _elm_lang$core$Json_Decode$succeed(
@@ -11585,7 +11661,7 @@ var _michaelmosher$zenoss_web$Zenoss_Http$stderrDecoder = A2(
 				l));
 	},
 	_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string));
-var _michaelmosher$zenoss_web$Zenoss_Http$eventStateDecoder = A2(
+var _michaelmosher$zenoss_web$Zenoss_Http_Events$eventStateDecoder = A2(
 	_elm_lang$core$Json_Decode$andThen,
 	function (str) {
 		var _p0 = str;
@@ -11600,7 +11676,7 @@ var _michaelmosher$zenoss_web$Zenoss_Http$eventStateDecoder = A2(
 		}
 	},
 	_elm_lang$core$Json_Decode$string);
-var _michaelmosher$zenoss_web$Zenoss_Http$severityDecoder = A2(
+var _michaelmosher$zenoss_web$Zenoss_Http_Events$severityDecoder = A2(
 	_elm_lang$core$Json_Decode$andThen,
 	function (num) {
 		var _p1 = num;
@@ -11622,7 +11698,7 @@ var _michaelmosher$zenoss_web$Zenoss_Http$severityDecoder = A2(
 		}
 	},
 	_elm_lang$core$Json_Decode$int);
-var _michaelmosher$zenoss_web$Zenoss_Http$eventDecoder = A4(
+var _michaelmosher$zenoss_web$Zenoss_Http_Events$eventDecoder = A4(
 	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optionalAt,
 	{
 		ctor: '::',
@@ -11633,7 +11709,7 @@ var _michaelmosher$zenoss_web$Zenoss_Http$eventDecoder = A4(
 			_1: {ctor: '[]'}
 		}
 	},
-	_michaelmosher$zenoss_web$Zenoss_Http$stderrDecoder,
+	_michaelmosher$zenoss_web$Zenoss_Http_Events$stderrDecoder,
 	'N/A',
 	A3(
 		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$requiredAt,
@@ -11666,11 +11742,11 @@ var _michaelmosher$zenoss_web$Zenoss_Http$eventDecoder = A4(
 						A3(
 							_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
 							'eventState',
-							_michaelmosher$zenoss_web$Zenoss_Http$eventStateDecoder,
+							_michaelmosher$zenoss_web$Zenoss_Http_Events$eventStateDecoder,
 							A3(
 								_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
 								'severity',
-								_michaelmosher$zenoss_web$Zenoss_Http$severityDecoder,
+								_michaelmosher$zenoss_web$Zenoss_Http_Events$severityDecoder,
 								A3(
 									_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
 									'prodState',
@@ -11696,52 +11772,19 @@ var _michaelmosher$zenoss_web$Zenoss_Http$eventDecoder = A4(
 												'id',
 												_elm_lang$core$Json_Decode$string,
 												_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_michaelmosher$zenoss_web$Main_Model$Event)))))))))))));
-var _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsDecoder = A2(
+var _michaelmosher$zenoss_web$Zenoss_Http_Events$acknowledgeDecoder = A2(
 	_elm_lang$core$Json_Decode$field,
 	'result',
 	A2(_elm_lang$core$Json_Decode$field, 'success', _elm_lang$core$Json_Decode$bool));
-var _michaelmosher$zenoss_web$Zenoss_Http$queryEventsDecoder = A2(
+var _michaelmosher$zenoss_web$Zenoss_Http_Events$unacknowledgeDecoder = _michaelmosher$zenoss_web$Zenoss_Http_Events$acknowledgeDecoder;
+var _michaelmosher$zenoss_web$Zenoss_Http_Events$queryDecoder = A2(
 	_elm_lang$core$Json_Decode$field,
 	'result',
 	A2(
 		_elm_lang$core$Json_Decode$field,
 		'events',
-		_elm_lang$core$Json_Decode$list(_michaelmosher$zenoss_web$Zenoss_Http$eventDecoder)));
-var _michaelmosher$zenoss_web$Zenoss_Http$eventsRequestBody = F2(
-	function (method, data) {
-		return _elm_lang$http$Http$jsonBody(
-			_elm_lang$core$Json_Encode$object(
-				{
-					ctor: '::',
-					_0: {
-						ctor: '_Tuple2',
-						_0: 'action',
-						_1: _elm_lang$core$Json_Encode$string('EventsRouter')
-					},
-					_1: {
-						ctor: '::',
-						_0: {
-							ctor: '_Tuple2',
-							_0: 'method',
-							_1: _elm_lang$core$Json_Encode$string(method)
-						},
-						_1: {
-							ctor: '::',
-							_0: {
-								ctor: '_Tuple2',
-								_0: 'tid',
-								_1: _elm_lang$core$Json_Encode$int(1)
-							},
-							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'data', _1: data},
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				}));
-	});
-var _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsData = function (eventId) {
+		_elm_lang$core$Json_Decode$list(_michaelmosher$zenoss_web$Zenoss_Http_Events$eventDecoder)));
+var _michaelmosher$zenoss_web$Zenoss_Http_Events$acknowledgeData = function (eventId) {
 	return _elm_lang$core$Json_Encode$list(
 		{
 			ctor: '::',
@@ -11763,7 +11806,8 @@ var _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsData = function (even
 			_1: {ctor: '[]'}
 		});
 };
-var _michaelmosher$zenoss_web$Zenoss_Http$queryEventData = function () {
+var _michaelmosher$zenoss_web$Zenoss_Http_Events$unacknowledgeData = _michaelmosher$zenoss_web$Zenoss_Http_Events$acknowledgeData;
+var _michaelmosher$zenoss_web$Zenoss_Http_Events$queryData = function () {
 	var filter = _elm_lang$core$Json_Encode$object(
 		{
 			ctor: '::',
@@ -11836,60 +11880,28 @@ var _michaelmosher$zenoss_web$Zenoss_Http$queryEventData = function () {
 			_1: {ctor: '[]'}
 		});
 }();
-var _michaelmosher$zenoss_web$Zenoss_Http$eventsRequest = F3(
-	function (auth, body, decoder) {
-		var password = auth.password;
-		var username = auth.username;
-		var authString = A2(
-			_elm_lang$core$Basics_ops['++'],
-			'Basic ',
-			_truqu$elm_base64$Base64$encode(
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					username,
-					A2(_elm_lang$core$Basics_ops['++'], ':', password))));
-		return _elm_lang$http$Http$request(
-			{
-				method: 'POST',
-				headers: {
-					ctor: '::',
-					_0: A2(_elm_lang$http$Http$header, 'Authorization', authString),
-					_1: {ctor: '[]'}
-				},
-				url: A2(
-					_elm_lang$core$Basics_ops['++'],
-					'https://',
-					A2(_elm_lang$core$Basics_ops['++'], auth.hostname, '/zport/dmd/evconsole_router')),
-				body: body,
-				expect: _elm_lang$http$Http$expectJson(decoder),
-				timeout: _elm_lang$core$Maybe$Nothing,
-				withCredentials: false
-			});
-	});
-var _michaelmosher$zenoss_web$Zenoss_Http$unacknowledgeEvents = F2(
+var _michaelmosher$zenoss_web$Zenoss_Http_Events$eventsRequestBody = _michaelmosher$zenoss_web$Zenoss_Http_Shared$apiRequestBody('EventsRouter');
+var _michaelmosher$zenoss_web$Zenoss_Http_Events$eventRequest = _michaelmosher$zenoss_web$Zenoss_Http_Shared$apiRequest('evconsole_router');
+var _michaelmosher$zenoss_web$Zenoss_Http_Events$unacknowledge = F2(
 	function (auth, eventId) {
 		var body = A2(
-			_michaelmosher$zenoss_web$Zenoss_Http$eventsRequestBody,
+			_michaelmosher$zenoss_web$Zenoss_Http_Events$eventsRequestBody,
 			'unacknowledge',
-			_michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsData(eventId));
-		return A3(_michaelmosher$zenoss_web$Zenoss_Http$eventsRequest, auth, body, _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsDecoder);
+			_michaelmosher$zenoss_web$Zenoss_Http_Events$unacknowledgeData(eventId));
+		return A3(_michaelmosher$zenoss_web$Zenoss_Http_Events$eventRequest, auth, body, _michaelmosher$zenoss_web$Zenoss_Http_Events$unacknowledgeDecoder);
 	});
-var _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEvents = F2(
+var _michaelmosher$zenoss_web$Zenoss_Http_Events$acknowledge = F2(
 	function (auth, eventId) {
 		var body = A2(
-			_michaelmosher$zenoss_web$Zenoss_Http$eventsRequestBody,
+			_michaelmosher$zenoss_web$Zenoss_Http_Events$eventsRequestBody,
 			'acknowledge',
-			_michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsData(eventId));
-		return A3(_michaelmosher$zenoss_web$Zenoss_Http$eventsRequest, auth, body, _michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEventsDecoder);
+			_michaelmosher$zenoss_web$Zenoss_Http_Events$acknowledgeData(eventId));
+		return A3(_michaelmosher$zenoss_web$Zenoss_Http_Events$eventRequest, auth, body, _michaelmosher$zenoss_web$Zenoss_Http_Events$acknowledgeDecoder);
 	});
-var _michaelmosher$zenoss_web$Zenoss_Http$queryEvents = function (auth) {
-	var body = A2(_michaelmosher$zenoss_web$Zenoss_Http$eventsRequestBody, 'query', _michaelmosher$zenoss_web$Zenoss_Http$queryEventData);
-	return A3(_michaelmosher$zenoss_web$Zenoss_Http$eventsRequest, auth, body, _michaelmosher$zenoss_web$Zenoss_Http$queryEventsDecoder);
+var _michaelmosher$zenoss_web$Zenoss_Http_Events$query = function (auth) {
+	var body = A2(_michaelmosher$zenoss_web$Zenoss_Http_Events$eventsRequestBody, 'query', _michaelmosher$zenoss_web$Zenoss_Http_Events$queryData);
+	return A3(_michaelmosher$zenoss_web$Zenoss_Http_Events$eventRequest, auth, body, _michaelmosher$zenoss_web$Zenoss_Http_Events$queryDecoder);
 };
-var _michaelmosher$zenoss_web$Zenoss_Http$Auth = F3(
-	function (a, b, c) {
-		return {hostname: a, username: b, password: c};
-	});
 
 var _michaelmosher$zenoss_web$Zenoss_Html$breakLongWords = function (summary) {
 	return A2(
@@ -12595,7 +12607,7 @@ var _michaelmosher$zenoss_web$Zenoss$unacknowledgeEvent = F2(
 	function (model, eventId) {
 		var events = A2(_michaelmosher$zenoss_web$Zenoss$changeEventState, model, eventId);
 		var request = A2(
-			_michaelmosher$zenoss_web$Zenoss_Http$unacknowledgeEvents,
+			_michaelmosher$zenoss_web$Zenoss_Http_Events$unacknowledge,
 			{hostname: model.hostname, username: model.username, password: model.password},
 			eventId);
 		var responseHandler = _michaelmosher$zenoss_web$Main_Model$UnacknowledgeResponse(eventId);
@@ -12618,7 +12630,7 @@ var _michaelmosher$zenoss_web$Zenoss$acknowledgeEvent = F2(
 	function (model, eventId) {
 		var events = A2(_michaelmosher$zenoss_web$Zenoss$changeEventState, model, eventId);
 		var request = A2(
-			_michaelmosher$zenoss_web$Zenoss_Http$acknowledgeEvents,
+			_michaelmosher$zenoss_web$Zenoss_Http_Events$acknowledge,
 			{hostname: model.hostname, username: model.username, password: model.password},
 			eventId);
 		var responseHandler = _michaelmosher$zenoss_web$Main_Model$AcknowledgeResponse(eventId);
@@ -12638,7 +12650,7 @@ var _michaelmosher$zenoss_web$Zenoss$acknowledgeEvent = F2(
 			});
 	});
 var _michaelmosher$zenoss_web$Zenoss$refreshEvents = function (model) {
-	var request = _michaelmosher$zenoss_web$Zenoss_Http$queryEvents(
+	var request = _michaelmosher$zenoss_web$Zenoss_Http_Events$query(
 		{hostname: model.hostname, username: model.username, password: model.password});
 	var responseHandler = _michaelmosher$zenoss_web$Main_Model$NewEvents;
 	return A2(_elm_lang$http$Http$send, responseHandler, request);

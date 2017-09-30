@@ -5,14 +5,14 @@ import Http
 import Navigation
 
 import Main.Model exposing (Model, Msg, Event, EventState(..))
-import Zenoss.Http
+import Zenoss.Http.Events as ZenossEvents
 import Zenoss.Html
 
 -- function to handle RefreshEvents Msg
 refreshEvents: Model -> Cmd Msg
 refreshEvents model =
     let responseHandler = Main.Model.NewEvents
-        request = Zenoss.Http.queryEvents {
+        request = ZenossEvents.query {
             hostname = model.hostname,
             username = model.username,
             password = model.password
@@ -25,7 +25,7 @@ refreshEvents model =
 acknowledgeEvent: Model -> String -> (Model, Cmd Msg)
 acknowledgeEvent model eventId =
     let responseHandler = Main.Model.AcknowledgeResponse eventId
-        request = Zenoss.Http.acknowledgeEvents {
+        request = ZenossEvents.acknowledge {
             hostname = model.hostname,
             username = model.username,
             password = model.password
@@ -41,7 +41,7 @@ acknowledgeEvent model eventId =
 unacknowledgeEvent:  Model -> String -> (Model, Cmd Msg)
 unacknowledgeEvent model eventId =
     let responseHandler = Main.Model.UnacknowledgeResponse eventId
-        request = Zenoss.Http.unacknowledgeEvents {
+        request = ZenossEvents.unacknowledge {
             hostname = model.hostname,
             username = model.username,
             password = model.password
