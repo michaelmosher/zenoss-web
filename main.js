@@ -10516,7 +10516,7 @@ var _michaelmosher$zenoss_web$Main_Model$EventDetails = function (a) {
 var _michaelmosher$zenoss_web$Main_Model$NewEvents = function (a) {
 	return {ctor: 'NewEvents', _0: a};
 };
-var _michaelmosher$zenoss_web$Main_Model$FetchEvents = {ctor: 'FetchEvents'};
+var _michaelmosher$zenoss_web$Main_Model$RefreshEvents = {ctor: 'RefreshEvents'};
 var _michaelmosher$zenoss_web$Main_Model$LoginMsg = {ctor: 'LoginMsg'};
 var _michaelmosher$zenoss_web$Main_Model$UpdatePassword = function (a) {
 	return {ctor: 'UpdatePassword', _0: a};
@@ -10815,18 +10815,58 @@ var _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle = _elm_lang$html$Html_
 			}
 		}
 	});
-var _michaelmosher$zenoss_web$Main_Html$refreshButton = A2(
-	_elm_lang$html$Html$div,
-	{
-		ctor: '::',
-		_0: _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle,
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html$text('Refresh'),
-		_1: {ctor: '[]'}
-	});
+var _michaelmosher$zenoss_web$Main_Html$refreshButton = function (page) {
+	var refreshAction = function () {
+		var _p0 = page;
+		_v0_2:
+		do {
+			if (_p0.ctor === 'Just') {
+				switch (_p0._0.ctor) {
+					case 'EventsPage':
+						return _elm_lang$core$Maybe$Just(_michaelmosher$zenoss_web$Main_Model$RefreshEvents);
+					case 'EventPage':
+						return _elm_lang$core$Maybe$Just(_michaelmosher$zenoss_web$Main_Model$RefreshEvents);
+					default:
+						break _v0_2;
+				}
+			} else {
+				break _v0_2;
+			}
+		} while(false);
+		return _elm_lang$core$Maybe$Nothing;
+	}();
+	var buttonAttributes = function () {
+		var _p1 = refreshAction;
+		if (_p1.ctor === 'Just') {
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(_p1._0),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle,
+					_1: {ctor: '[]'}
+				});
+		} else {
+			return {
+				ctor: '::',
+				_0: _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle,
+				_1: {ctor: '[]'}
+			};
+		}
+	}();
+	return A2(
+		_elm_lang$html$Html$div,
+		buttonAttributes,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Refresh'),
+			_1: {ctor: '[]'}
+		});
+};
 var _michaelmosher$zenoss_web$Main_Html$devicesButton = A2(
 	_elm_lang$html$Html$div,
 	{
@@ -10844,7 +10884,11 @@ var _michaelmosher$zenoss_web$Main_Html$eventsButton = A2(
 	{
 		ctor: '::',
 		_0: _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle,
-		_1: {ctor: '[]'}
+		_1: {
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_michaelmosher$zenoss_web$Main_Model$RefreshEvents),
+			_1: {ctor: '[]'}
+		}
 	},
 	{
 		ctor: '::',
@@ -10863,7 +10907,7 @@ var _michaelmosher$zenoss_web$Main_Html$dashboardButton = A2(
 		_0: _elm_lang$html$Html$text('Dashboard'),
 		_1: {ctor: '[]'}
 	});
-var _michaelmosher$zenoss_web$Main_Html$footer = function () {
+var _michaelmosher$zenoss_web$Main_Html$footer = function (page) {
 	var css = _elm_lang$html$Html_Attributes$style(
 		{
 			ctor: '::',
@@ -10887,10 +10931,10 @@ var _michaelmosher$zenoss_web$Main_Html$footer = function () {
 		},
 		{
 			ctor: '::',
-			_0: _michaelmosher$zenoss_web$Main_Html$refreshButton,
+			_0: _michaelmosher$zenoss_web$Main_Html$refreshButton(page),
 			_1: {ctor: '[]'}
 		});
-}();
+};
 var _michaelmosher$zenoss_web$Main_Html$header = function () {
 	var css = _elm_lang$html$Html_Attributes$style(
 		{
@@ -10931,54 +10975,55 @@ var _michaelmosher$zenoss_web$Main_Html$header = function () {
 			}
 		});
 }();
-var _michaelmosher$zenoss_web$Main_Html$overlay = function (children) {
-	var css = _elm_lang$html$Html_Attributes$style(
-		{
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'width', _1: '100%'},
-			_1: {
+var _michaelmosher$zenoss_web$Main_Html$overlay = F2(
+	function (children, currentPage) {
+		var css = _elm_lang$html$Html_Attributes$style(
+			{
 				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'height', _1: '100%'},
-				_1: {ctor: '[]'}
-			}
-		});
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: css,
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _michaelmosher$zenoss_web$Main_Html$header,
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$style(
-							{
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'padding', _1: '10px 0'},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'margin-bottom', _1: '20px'},
-									_1: {ctor: '[]'}
-								}
-							}),
-						_1: {ctor: '[]'}
-					},
-					children),
+				_0: {ctor: '_Tuple2', _0: 'width', _1: '100%'},
 				_1: {
 					ctor: '::',
-					_0: _michaelmosher$zenoss_web$Main_Html$footer,
+					_0: {ctor: '_Tuple2', _0: 'height', _1: '100%'},
 					_1: {ctor: '[]'}
 				}
-			}
-		});
-};
+			});
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: css,
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _michaelmosher$zenoss_web$Main_Html$header,
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$style(
+								{
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'padding', _1: '10px 0'},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 'margin-bottom', _1: '20px'},
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {ctor: '[]'}
+						},
+						children),
+					_1: {
+						ctor: '::',
+						_0: _michaelmosher$zenoss_web$Main_Html$footer(currentPage),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
 
 var _truqu$elm_base64$Base64_Decode$charToInt = function ($char) {
 	var _p0 = $char;
@@ -12581,19 +12626,23 @@ var _michaelmosher$zenoss_web$Main$view = function (model) {
 			case 'LoginPage':
 				return _michaelmosher$zenoss_web$Login$pageView(model);
 			case 'EventsPage':
-				return _michaelmosher$zenoss_web$Main_Html$overlay(
+				return A2(
+					_michaelmosher$zenoss_web$Main_Html$overlay,
 					{
 						ctor: '::',
 						_0: _michaelmosher$zenoss_web$Zenoss$eventsView(model),
 						_1: {ctor: '[]'}
-					});
+					},
+					model.currentPage);
 			default:
-				return _michaelmosher$zenoss_web$Main_Html$overlay(
+				return A2(
+					_michaelmosher$zenoss_web$Main_Html$overlay,
 					{
 						ctor: '::',
 						_0: A2(_michaelmosher$zenoss_web$Zenoss$eventDetailView, model, _p0._0._0),
 						_1: {ctor: '[]'}
-					});
+					},
+					model.currentPage);
 		}
 	} else {
 		return A2(
@@ -12710,12 +12759,19 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 							}
 						}
 					});
-			case 'FetchEvents':
-				return {
-					ctor: '_Tuple2',
-					_0: model,
-					_1: _michaelmosher$zenoss_web$Zenoss$refreshEvents(model)
-				};
+			case 'RefreshEvents':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					{
+						ctor: '::',
+						_0: _elm_lang$navigation$Navigation$newUrl('#Events'),
+						_1: {
+							ctor: '::',
+							_0: _michaelmosher$zenoss_web$Zenoss$refreshEvents(model),
+							_1: {ctor: '[]'}
+						}
+					});
 			case 'NewEvents':
 				if (_p1._0.ctor === 'Ok') {
 					return {

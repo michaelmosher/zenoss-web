@@ -2,11 +2,11 @@ module Main.Html exposing (..)
 
 import Html exposing (Html, div, text)
 import Html.Attributes exposing (style)
--- import Html.Events exposing (onClick)
-import Main.Model exposing (Msg)
+import Html.Events exposing (onClick)
+import Main.Model exposing (Msg(..), Page(..))
 
-overlay: List (Html Msg) -> Html Msg
-overlay children =
+overlay: List (Html Msg) -> Maybe Page -> Html Msg
+overlay children currentPage =
     let css = style[
             ("width", "100%"),
             ("height", "100%")
@@ -15,7 +15,7 @@ overlay children =
         div [css] [
             header,
             div [style[("padding", "10px 0"), ("margin-bottom", "20px")]] children,
-            footer
+            footer currentPage
         ]
 
 header: Html Msg
@@ -34,8 +34,8 @@ header =
         ]
 
 
-footer: Html Msg
-footer =
+footer: Maybe Page -> Html Msg
+footer page =
     let css = style [
             ("position", "fixed"),
             ("bottom", "0"),
@@ -43,7 +43,7 @@ footer =
         ]
     in
         div [css] [
-            refreshButton
+            refreshButton page
         ]
 
 
@@ -54,7 +54,7 @@ dashboardButton =
 
 eventsButton: Html Msg
 eventsButton =
-    div [sharedButtonStyle] [text "Events"]
+    div [sharedButtonStyle, onClick RefreshEvents] [text "Events"]
 
 
 devicesButton: Html Msg
@@ -62,9 +62,18 @@ devicesButton =
     div [sharedButtonStyle] [text "Devices"]
 
 
-refreshButton: Html Msg
-refreshButton =
-    div [sharedButtonStyle] [text "Refresh"]
+refreshButton: Maybe Page -> Html Msg
+refreshButton page =
+    let refreshAction = case page of
+            Just EventsPage -> Just RefreshEvents
+            Just (EventPage _) -> Just RefreshEvents
+            _ -> Nothing
+        buttonAttributes = case refreshAction of
+            Just msg -> [Html.Events.onClick msg] ++ [sharedButtonStyle]
+            Nothing -> [sharedButtonStyle]
+
+    in
+        div buttonAttributes [text "Refresh"]
 
 
 sharedButtonStyle : Html.Attribute a

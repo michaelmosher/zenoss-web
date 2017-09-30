@@ -8,7 +8,7 @@ import Main.Model exposing (Model, Msg, Event, EventState(..))
 import Zenoss.Http
 import Zenoss.Html
 
--- function to handle FetchEvents Msg
+-- function to handle RefreshEvents Msg
 refreshEvents: Model -> Cmd Msg
 refreshEvents model =
     let responseHandler = Main.Model.NewEvents

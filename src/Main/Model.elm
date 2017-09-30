@@ -42,7 +42,7 @@ type Msg =
     | UpdateUsername String
     | UpdatePassword String
     | LoginMsg
-    | FetchEvents
+    | RefreshEvents
     | NewEvents (Result Http.Error (List Event))
     | EventDetails String
     | AcknowledgeEvent String

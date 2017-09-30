@@ -81,8 +81,11 @@ update msg model =
                 LocalSettings.setSetting {key = "Zpassword", value = Just model.password}
             ]
 
-        FetchEvents ->
-            (model, Zenoss.refreshEvents model)
+        RefreshEvents ->
+            model ! [
+                Navigation.newUrl "#Events",
+                Zenoss.refreshEvents model
+            ]
 
         NewEvents (Ok e) ->
             ({model | events = e}, Cmd.none)
@@ -122,10 +125,10 @@ view model =
             Login.pageView model
 
         Just EventsPage ->
-            [Zenoss.eventsView model] |> Main.Html.overlay
+            Main.Html.overlay [Zenoss.eventsView model] model.currentPage
 
         Just (EventPage eid) ->
-            [Zenoss.eventDetailView model eid] |> Main.Html.overlay
+            Main.Html.overlay [Zenoss.eventDetailView model eid] model.currentPage
 
         Nothing ->
             h2 [] [text "ERRORS!"]
