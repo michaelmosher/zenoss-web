@@ -10793,10 +10793,10 @@ var _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle = _elm_lang$html$Html_
 				_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'height', _1: '30px'},
+					_0: {ctor: '_Tuple2', _0: 'height', _1: '45px'},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'line-height', _1: '30px'},
+						_0: {ctor: '_Tuple2', _0: 'line-height', _1: '45px'},
 						_1: {
 							ctor: '::',
 							_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
@@ -10942,8 +10942,28 @@ var _michaelmosher$zenoss_web$Main_Html$header = function () {
 			_0: {ctor: '_Tuple2', _0: 'display', _1: 'flex'},
 			_1: {
 				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
-				_1: {ctor: '[]'}
+				_0: {ctor: '_Tuple2', _0: 'position', _1: 'fixed'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'top', _1: '0'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'width', _1: '100%'},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'z-index', _1: '2'},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 'background-color', _1: 'white'},
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
 			}
 		});
 	return A2(
@@ -10977,7 +10997,21 @@ var _michaelmosher$zenoss_web$Main_Html$header = function () {
 }();
 var _michaelmosher$zenoss_web$Main_Html$overlay = F2(
 	function (children, currentPage) {
-		var css = _elm_lang$html$Html_Attributes$style(
+		var childrenCss = _elm_lang$html$Html_Attributes$style(
+			{
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'padding', _1: '10px, 0'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '45px'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'margin-bottom', _1: '45px'},
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+		var parentCss = _elm_lang$html$Html_Attributes$style(
 			{
 				ctor: '::',
 				_0: {ctor: '_Tuple2', _0: 'width', _1: '100%'},
@@ -10991,7 +11025,7 @@ var _michaelmosher$zenoss_web$Main_Html$overlay = F2(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: css,
+				_0: parentCss,
 				_1: {ctor: '[]'}
 			},
 			{
@@ -11003,16 +11037,7 @@ var _michaelmosher$zenoss_web$Main_Html$overlay = F2(
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$style(
-								{
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'padding', _1: '10px 0'},
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'margin-bottom', _1: '20px'},
-										_1: {ctor: '[]'}
-									}
-								}),
+							_0: childrenCss,
 							_1: {ctor: '[]'}
 						},
 						children),

@@ -7,14 +7,19 @@ import Main.Model exposing (Msg(..), Page(..))
 
 overlay: List (Html Msg) -> Maybe Page -> Html Msg
 overlay children currentPage =
-    let css = style[
+    let parentCss = style [
             ("width", "100%"),
             ("height", "100%")
         ]
+        childrenCss = style [
+            ("padding", "10px, 0"),
+             ("margin-top", "45px"),
+             ("margin-bottom", "45px")
+        ]
     in
-        div [css] [
+        div [parentCss] [
             header,
-            div [style[("padding", "10px 0"), ("margin-bottom", "20px")]] children,
+            div [childrenCss] children,
             footer currentPage
         ]
 
@@ -22,7 +27,12 @@ header: Html Msg
 header =
     let css = style [
             ("display", "flex"),
-            ("color", "white")
+            ("position", "fixed"),
+            ("top", "0"),
+            ("width", "100%"),
+            ("color", "white"),
+            ("z-index", "2"),
+            ("background-color", "white")
         ]
     in
         div [css] [
@@ -82,8 +92,8 @@ sharedButtonStyle =
         ("flex", "1 1 0"),
         ("background-color", "#001f3f"),
         ("color", "white"),
-        ("height", "30px"),
-        ("line-height", "30px"),
+        ("height", "45px"),
+        ("line-height", "45px"),
         ("text-align", "center"),
         ("font-weight", "bold"),
         ("font-size", "1.2em")
