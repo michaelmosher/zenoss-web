@@ -11,22 +11,29 @@ import Main.Model exposing (Device, Event, EventState(..), Msg(..))
 renderDeviceList: List Device -> Html Msg
 renderDeviceList devices =
     -- should this be hardcoded? No. Do I care...?
-    let devicesToCareAbout = List.filter (\d -> d.prodState /= "Decommissioned") devices
+    let partedDevices = List.filter (\d -> d.prodState /= "Decommissioned") devices
+            |> List.partition (\d -> countAlerts d > 0)
+        sortedDevices = (Tuple.first partedDevices) ++ (Tuple.second partedDevices)
     in
-        div [] (List.map renderDeviceSummary devicesToCareAbout)
+        div [] (List.map renderDeviceSummary sortedDevices)
 
 
 renderDeviceSummary: Device -> Html Msg
 renderDeviceSummary d =
     let css = [
-        ("border-bottom", "solid black 2px")
-    ]
+            ("border-bottom", "solid black 1px"),
+            ("padding", "5px")
+        ]
     in
         div [style css] [
-            eventDetailField "Name" d.name,
-            eventDetailField "Device Class" d.deviceClass,
-            eventDetailField "State" d.prodState,
-            eventDetailField "IP" d.ipAddress
+            div [style [("display", "flex")]] [
+                d.name |> renderEventDeviceName,
+                d.prodState |> renderEventProdState
+            ],
+            div [style [("display", "flex")]] [
+                span [style[("flex-grow", "1")]] [text d.ipAddress],
+                d |> countAlerts |> toString |> (++) "Active alerts: " |> text |> List.singleton |> span []
+            ]
         ]
 
 renderEventList: List Event -> Html Msg
@@ -244,3 +251,8 @@ breakLongWords summary =
             then span [style [("word-break", "break-all")]] [word ++ " " |> text]
             else word ++ " " |> text
         )
+
+
+countAlerts: Device -> Int
+countAlerts d = 
+    d.critEvents + d.errEvents + d.warnEvents

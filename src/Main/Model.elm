@@ -32,7 +32,10 @@ type alias Device = {
     name: String,
     deviceClass: String,
     prodState: String,
-    ipAddress: String
+    ipAddress: String,
+    critEvents: Int,
+    errEvents: Int,
+    warnEvents: Int
 }
 
 type alias Model = {

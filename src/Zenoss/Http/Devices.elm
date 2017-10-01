@@ -33,8 +33,10 @@ getData =
                     Json.string "name",
                     Json.string "deviceClass",
                     Json.string "productionState",
-                    Json.string "ipAddressString"
+                    Json.string "ipAddressString",
+                    Json.string "events"
             ]),
+            ("limit", Json.int 300),
             ("uid", Json.string "/zport/dmd/Devices/Server")
         ]
     ]
@@ -55,6 +57,9 @@ deviceDecoder =
         |> requiredAt ["deviceClass", "name"] Decode.string
         |> required "productionState" deviceProdStateDecoder
         |> optional "ipAddressString" Decode.string "unknown"
+        |> requiredAt ["events", "critical", "count"] Decode.int
+        |> requiredAt ["events", "error", "count"] Decode.int
+        |> requiredAt ["events", "warning", "count"] Decode.int
 
 
 deviceProdStateDecoder: Decode.Decoder String
