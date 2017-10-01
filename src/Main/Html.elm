@@ -37,9 +37,7 @@ header =
     in
         div [css] [
             dashboardButton,
-            text "|",
             eventsButton,
-            text "|",
             devicesButton
         ]
 
@@ -59,17 +57,22 @@ footer page =
 
 dashboardButton: Html Msg
 dashboardButton =
-    div [sharedButtonStyle] [text "Dashboard"]
+    div [style sharedButtonStyle] [text "Dashboard"]
 
 
 eventsButton: Html Msg
 eventsButton =
-    div [sharedButtonStyle, onClick RefreshEvents] [text "Events"]
+    let css = [
+            ("border-left", "white solid 3px"),
+            ("border-right", "white solid 3px")
+        ] ++ sharedButtonStyle
+    in
+        div [style css, onClick RefreshEvents] [text "Events"]
 
 
 devicesButton: Html Msg
 devicesButton =
-    div [sharedButtonStyle, onClick RefreshDevices] [text "Devices"]
+    div [style sharedButtonStyle, onClick RefreshDevices] [text "Devices"]
 
 
 refreshButton: Maybe Page -> Html Msg
@@ -80,16 +83,16 @@ refreshButton page =
             Just (EventPage _) -> Just RefreshEvents
             _ -> Nothing
         buttonAttributes = case refreshAction of
-            Just msg -> [Html.Events.onClick msg] ++ [sharedButtonStyle]
-            Nothing -> [sharedButtonStyle]
+            Just msg -> [Html.Events.onClick msg] ++ [style sharedButtonStyle]
+            Nothing -> [style sharedButtonStyle]
 
     in
         div buttonAttributes [text "Refresh"]
 
 
-sharedButtonStyle : Html.Attribute a
+sharedButtonStyle : List ( String, String)
 sharedButtonStyle =
-    style [
+    [
         ("flex", "1 1 0"),
         ("background-color", "#001f3f"),
         ("color", "white"),

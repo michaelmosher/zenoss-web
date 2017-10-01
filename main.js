@@ -10790,40 +10790,39 @@ var _michaelmosher$zenoss_web$Login$pageView = function (model) {
 		});
 };
 
-var _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle = _elm_lang$html$Html_Attributes$style(
-	{
+var _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 'flex', _1: '1 1 0'},
+	_1: {
 		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'flex', _1: '1 1 0'},
+		_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#001f3f'},
 		_1: {
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'background-color', _1: '#001f3f'},
+			_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
 			_1: {
 				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'color', _1: 'white'},
+				_0: {ctor: '_Tuple2', _0: 'height', _1: '45px'},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'height', _1: '45px'},
+					_0: {ctor: '_Tuple2', _0: 'line-height', _1: '45px'},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'line-height', _1: '45px'},
+						_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
 						_1: {
 							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'text-align', _1: 'center'},
+							_0: {ctor: '_Tuple2', _0: 'font-weight', _1: 'bold'},
 							_1: {
 								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'font-weight', _1: 'bold'},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'font-size', _1: '1.2em'},
-									_1: {ctor: '[]'}
-								}
+								_0: {ctor: '_Tuple2', _0: 'font-size', _1: '1.2em'},
+								_1: {ctor: '[]'}
 							}
 						}
 					}
 				}
 			}
 		}
-	});
+	}
+};
 var _michaelmosher$zenoss_web$Main_Html$refreshButton = function (page) {
 	var refreshAction = function () {
 		var _p0 = page;
@@ -10858,13 +10857,13 @@ var _michaelmosher$zenoss_web$Main_Html$refreshButton = function (page) {
 				},
 				{
 					ctor: '::',
-					_0: _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle,
+					_0: _elm_lang$html$Html_Attributes$style(_michaelmosher$zenoss_web$Main_Html$sharedButtonStyle),
 					_1: {ctor: '[]'}
 				});
 		} else {
 			return {
 				ctor: '::',
-				_0: _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle,
+				_0: _elm_lang$html$Html_Attributes$style(_michaelmosher$zenoss_web$Main_Html$sharedButtonStyle),
 				_1: {ctor: '[]'}
 			};
 		}
@@ -10882,7 +10881,7 @@ var _michaelmosher$zenoss_web$Main_Html$devicesButton = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
-		_0: _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle,
+		_0: _elm_lang$html$Html_Attributes$style(_michaelmosher$zenoss_web$Main_Html$sharedButtonStyle),
 		_1: {
 			ctor: '::',
 			_0: _elm_lang$html$Html_Events$onClick(_michaelmosher$zenoss_web$Main_Model$RefreshDevices),
@@ -10894,27 +10893,41 @@ var _michaelmosher$zenoss_web$Main_Html$devicesButton = A2(
 		_0: _elm_lang$html$Html$text('Devices'),
 		_1: {ctor: '[]'}
 	});
-var _michaelmosher$zenoss_web$Main_Html$eventsButton = A2(
-	_elm_lang$html$Html$div,
-	{
-		ctor: '::',
-		_0: _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle,
-		_1: {
+var _michaelmosher$zenoss_web$Main_Html$eventsButton = function () {
+	var css = A2(
+		_elm_lang$core$Basics_ops['++'],
+		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Events$onClick(_michaelmosher$zenoss_web$Main_Model$RefreshEvents),
+			_0: {ctor: '_Tuple2', _0: 'border-left', _1: 'white solid 3px'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'border-right', _1: 'white solid 3px'},
+				_1: {ctor: '[]'}
+			}
+		},
+		_michaelmosher$zenoss_web$Main_Html$sharedButtonStyle);
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(css),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(_michaelmosher$zenoss_web$Main_Model$RefreshEvents),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Events'),
 			_1: {ctor: '[]'}
-		}
-	},
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html$text('Events'),
-		_1: {ctor: '[]'}
-	});
+		});
+}();
 var _michaelmosher$zenoss_web$Main_Html$dashboardButton = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
-		_0: _michaelmosher$zenoss_web$Main_Html$sharedButtonStyle,
+		_0: _elm_lang$html$Html_Attributes$style(_michaelmosher$zenoss_web$Main_Html$sharedButtonStyle),
 		_1: {ctor: '[]'}
 	},
 	{
@@ -10993,19 +11006,11 @@ var _michaelmosher$zenoss_web$Main_Html$header = function () {
 			_0: _michaelmosher$zenoss_web$Main_Html$dashboardButton,
 			_1: {
 				ctor: '::',
-				_0: _elm_lang$html$Html$text('|'),
+				_0: _michaelmosher$zenoss_web$Main_Html$eventsButton,
 				_1: {
 					ctor: '::',
-					_0: _michaelmosher$zenoss_web$Main_Html$eventsButton,
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('|'),
-						_1: {
-							ctor: '::',
-							_0: _michaelmosher$zenoss_web$Main_Html$devicesButton,
-							_1: {ctor: '[]'}
-						}
-					}
+					_0: _michaelmosher$zenoss_web$Main_Html$devicesButton,
+					_1: {ctor: '[]'}
 				}
 			}
 		});
