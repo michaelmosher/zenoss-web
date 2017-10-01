@@ -4,7 +4,7 @@ import Http
 import Json.Decode as Decode
 import Json.Decode.Pipeline exposing (decode, optional, required, requiredAt)
 import Json.Encode as Json
-import Main.Model exposing (Device)
+import Main.Model exposing (Device, ProdState)
 import Zenoss.Http.Shared exposing (Auth, apiRequest, apiRequestBody)
 
 get: Auth -> Http.Request (List Device)
@@ -55,21 +55,21 @@ deviceDecoder =
         |> required "uid" Decode.string
         |> required "name" Decode.string
         |> requiredAt ["deviceClass", "name"] Decode.string
-        |> required "productionState" deviceProdStateDecoder
+        |> required "productionState" prodStateDecoder
         |> optional "ipAddressString" Decode.string "unknown"
         |> requiredAt ["events", "critical", "count"] Decode.int
         |> requiredAt ["events", "error", "count"] Decode.int
         |> requiredAt ["events", "warning", "count"] Decode.int
 
 
-deviceProdStateDecoder: Decode.Decoder String
-deviceProdStateDecoder =
+prodStateDecoder: Decode.Decoder ProdState
+prodStateDecoder =
     Decode.int |> Decode.andThen (\int ->
             case int of
-                1000 -> Decode.succeed "Production"
-                500 -> Decode.succeed "Pre-Production"
-                400 -> Decode.succeed "Test"
-                300 -> Decode.succeed "Maintenance"
-                (-1) -> Decode.succeed "Decommissioned"
-                c -> Decode.succeed <| "Custom: " ++ (toString c)
+                1000 -> Decode.succeed ("Production", 1000)
+                500 -> Decode.succeed ("Pre-Production", 500)
+                400 -> Decode.succeed ("Test", 400)
+                300 -> Decode.succeed ("Maintenance", 300)
+                (-1) -> Decode.succeed ("Decommissioned", -1)
+                c -> Decode.succeed ("Custom", c)
         )

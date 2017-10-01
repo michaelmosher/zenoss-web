@@ -6,14 +6,16 @@ import Html.Attributes exposing (class, style)
 import Html.Events exposing (onClick)
 import Svg
 import Svg.Attributes exposing (points, fill, cx, cy, r)
-import Main.Model exposing (Device, Event, EventState(..), Msg(..))
+import Main.Model exposing (Device, Event, EventState(..), Msg(..), ProdState)
 
 renderDeviceList: List Device -> Html Msg
 renderDeviceList devices =
     -- should this be hardcoded? No. Do I care...?
-    let partedDevices = List.filter (\d -> d.prodState /= "Decommissioned") devices
+    let (alertingDevices, healthyDevices) = List.filter (\d ->
+                Tuple.first d.prodState /= "Decommissioned"
+            ) devices
             |> List.partition (\d -> countAlerts d > 0)
-        sortedDevices = (Tuple.first partedDevices) ++ (Tuple.second partedDevices)
+        sortedDevices = alertingDevices ++ healthyDevices
     in
         div [] (List.map renderDeviceSummary sortedDevices)
 
@@ -68,7 +70,7 @@ renderDetailedDevice device =
     in div [style css] [
         eventDetailField "Name" device.name,
         eventDetailField "Device Class" device.deviceClass,
-        eventDetailField "Production State" device.prodState,
+        eventDetailField "Production State" (Tuple.first device.prodState),
         eventDetailField "IP Address" device.ipAddress
     ]
 
@@ -117,7 +119,7 @@ renderDetailedEvent event =
             eventDetailField "device" event.deviceName,
             eventDetailField "component" component,
             eventDetailField "summary" event.summary,
-            eventDetailField "prod state" event.prodState,
+            eventDetailField "prod state" (Tuple.first event.prodState),
             eventDetailField "severity" event.severity,
             eventDetailField "owner" ownerString,
             eventDetailField "first occurance" event.firstTime,
@@ -158,9 +160,9 @@ renderEventDeviceName d =
         span [css] [text d]
 
 
-renderEventProdState: String -> Html a
-renderEventProdState p =
-    span [] [text p]
+renderEventProdState: ProdState -> Html a
+renderEventProdState ps =
+    span [] [Tuple.first ps |> text]
 
 
 renderEventSummary: String -> Html a

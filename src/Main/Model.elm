@@ -12,11 +12,13 @@ type Page = LoginPage | DashboardPage | DevicesPage | DevicePage String | Events
 
 type EventState = New | Acknowledged
 
+type alias ProdState = (String, Int)
+
 type alias Event = {
     id: String,
     deviceName: String,
     summary: String,
-    prodState: String,
+    prodState: ProdState,
     severity: String,
     eventState: EventState,
     owner: Maybe String,
@@ -31,7 +33,7 @@ type alias Device = {
     uid: String,
     name: String,
     deviceClass: String,
-    prodState: String,
+    prodState: ProdState,
     ipAddress: String,
     critEvents: Int,
     errEvents: Int,
@@ -64,3 +66,5 @@ type Msg =
     | RefreshDevices
     | NewDevices (Result Http.Error (List Device))
     | ShowDashboard
+    | UpdateDevice ProdState String
+    | UpdateDeviceResponse String (Result Http.Error (Bool))

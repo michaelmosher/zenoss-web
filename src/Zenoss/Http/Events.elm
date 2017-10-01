@@ -4,7 +4,7 @@ import Http
 import Json.Decode as Decode
 import Json.Decode.Pipeline exposing (decode, optionalAt, required, requiredAt)
 import Json.Encode as Json
-import Main.Model exposing (Event, EventState(..))
+import Main.Model exposing (Event, EventState(..), ProdState)
 import Zenoss.Http.Shared exposing (Auth, apiRequest, apiRequestBody)
 
 
@@ -99,7 +99,7 @@ eventDecoder =
         |> required "id" Decode.string
         |> requiredAt ["device", "text"] Decode.string
         |> required "summary" Decode.string
-        |> required "prodState" Decode.string
+        |> required "prodState" prodStateDecoder
         |> required "severity"severityDecoder
         |> required "eventState" eventStateDecoder
         |> required "ownerid" (Decode.maybe Decode.string)
@@ -108,6 +108,19 @@ eventDecoder =
         |> required "lastTime" Decode.string
         |> requiredAt ["component", "text"] (Decode.nullable Decode.string)
         |> optionalAt ["details", "stderr"] stderrDecoder "N/A"
+
+
+prodStateDecoder: Decode.Decoder ProdState
+prodStateDecoder =
+    Decode.string |> Decode.andThen (\ps ->
+            case ps of
+                "Production" -> Decode.succeed ("Production", 1000)
+                "Pre-Production" -> Decode.succeed ("Pre-Production", 500)
+                "Test" -> Decode.succeed ("Test", 400)
+                "Maintenance" -> Decode.succeed ("Maintenance", 300)
+                "Decommissioned" -> Decode.succeed ("Decommissioned", -1)
+                c -> Decode.succeed (c, 0)
+        )
 
 
 severityDecoder: Decode.Decoder String

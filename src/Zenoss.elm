@@ -4,7 +4,7 @@ import Html exposing (Html, div, h2, text)
 import Http
 import Navigation
 
-import Main.Model exposing (Model, Msg, Event, EventState(..))
+import Main.Model exposing (Model, Msg, Event, EventState(..), ProdState)
 import Zenoss.Http.Devices as ZenossDevices
 import Zenoss.Http.Events as ZenossEvents
 import Zenoss.Html
@@ -19,6 +19,19 @@ refreshDevices model =
             password = model.password
         }
     in Http.send responseHandler request
+
+
+-- function to handle UpdateDevice Msg
+updateDevice: ProdState -> String -> Model -> (Model, Cmd Msg)
+updateDevice ps uid model =
+    let responseHandler = Main.Model.UpdateDeviceResponse
+        request = ZenossDevices.setInfo {
+            hostname = model.hostname,
+            username = model.username,
+            password = model.password
+        } uid ps
+    in
+        (model, Cmd.none)
 
 -- function to handle RefreshEvents Msg
 refreshEvents: Model -> Cmd Msg
@@ -114,7 +127,7 @@ errorEvent err =
     Event "error"
           "zenoss-web"
           ("Failed to connect to Zenoss server: " ++ toString err)
-          "Production"
+          ("Production", 1000)
           "Critical"
           New Nothing
           1
