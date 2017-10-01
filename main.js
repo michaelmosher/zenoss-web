@@ -10456,6 +10456,192 @@ var _evancz$url_parser$UrlParser$intParam = function (name) {
 	return A2(_evancz$url_parser$UrlParser$customParam, name, _evancz$url_parser$UrlParser$intParamHelp);
 };
 
+var _michaelmosher$zenoss_web$Dashboard_Html$content = {
+	ctor: '::',
+	_0: 'This is a mobile-friendly interface for Zenoss.',
+	_1: {
+		ctor: '::',
+		_0: 'Current features',
+		_1: {ctor: '[]'}
+	}
+};
+var _michaelmosher$zenoss_web$Dashboard_Html$renderDashboard = A2(
+	_elm_lang$html$Html$article,
+	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$h1,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Welcome!'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$p,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('This is a mobile-friendly interface for Zenoss. Current features include:'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$ul,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$li,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('view current event list'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$li,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('view event details'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$li,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('acknowledge and unacknowledge events'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$li,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('view device summaries'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$p,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Upcoming features include:'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$ul,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$li,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('close events (if anyone requests it)'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$li,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('view device details (please submit feedback on which details should be included)'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$li,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('custom event filters'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$li,
+												{ctor: '[]'},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('view and add event log message (if anyone requests it)'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$p,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('To submit feedback, please create an issue on '),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$a,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$href('https://github.com/michaelmosher/zenoss-web'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('GitHub.'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$p,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('This is beta version 1.'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		}
+	});
+
 var _michaelmosher$zenoss_web$Main_Model$Setting = F2(
 	function (a, b) {
 		return {key: a, value: b};
@@ -10498,9 +10684,11 @@ var _michaelmosher$zenoss_web$Main_Model$EventPage = function (a) {
 };
 var _michaelmosher$zenoss_web$Main_Model$EventsPage = {ctor: 'EventsPage'};
 var _michaelmosher$zenoss_web$Main_Model$DevicesPage = {ctor: 'DevicesPage'};
+var _michaelmosher$zenoss_web$Main_Model$DashboardPage = {ctor: 'DashboardPage'};
 var _michaelmosher$zenoss_web$Main_Model$LoginPage = {ctor: 'LoginPage'};
 var _michaelmosher$zenoss_web$Main_Model$Acknowledged = {ctor: 'Acknowledged'};
 var _michaelmosher$zenoss_web$Main_Model$New = {ctor: 'New'};
+var _michaelmosher$zenoss_web$Main_Model$ShowDashboard = {ctor: 'ShowDashboard'};
 var _michaelmosher$zenoss_web$Main_Model$NewDevices = function (a) {
 	return {ctor: 'NewDevices', _0: a};
 };
@@ -10928,7 +11116,11 @@ var _michaelmosher$zenoss_web$Main_Html$dashboardButton = A2(
 	{
 		ctor: '::',
 		_0: _elm_lang$html$Html_Attributes$style(_michaelmosher$zenoss_web$Main_Html$sharedButtonStyle),
-		_1: {ctor: '[]'}
+		_1: {
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(_michaelmosher$zenoss_web$Main_Model$ShowDashboard),
+			_1: {ctor: '[]'}
+		}
 	},
 	{
 		ctor: '::',
@@ -12987,6 +13179,15 @@ var _michaelmosher$zenoss_web$Main$view = function (model) {
 		switch (_p0._0.ctor) {
 			case 'LoginPage':
 				return _michaelmosher$zenoss_web$Login$pageView(model);
+			case 'DashboardPage':
+				return A2(
+					_michaelmosher$zenoss_web$Main_Html$overlay,
+					{
+						ctor: '::',
+						_0: _michaelmosher$zenoss_web$Dashboard_Html$renderDashboard,
+						_1: {ctor: '[]'}
+					},
+					model.currentPage);
 			case 'DevicesPage':
 				return A2(
 					_michaelmosher$zenoss_web$Main_Html$overlay,
@@ -13034,24 +13235,31 @@ var _michaelmosher$zenoss_web$Main$route = _evancz$url_parser$UrlParser$oneOf(
 			ctor: '::',
 			_0: A2(
 				_evancz$url_parser$UrlParser$map,
-				_michaelmosher$zenoss_web$Main_Model$DevicesPage,
-				_evancz$url_parser$UrlParser$s('Devices')),
+				_michaelmosher$zenoss_web$Main_Model$DashboardPage,
+				_evancz$url_parser$UrlParser$s('Dashboard')),
 			_1: {
 				ctor: '::',
 				_0: A2(
 					_evancz$url_parser$UrlParser$map,
-					_michaelmosher$zenoss_web$Main_Model$EventsPage,
-					_evancz$url_parser$UrlParser$s('Events')),
+					_michaelmosher$zenoss_web$Main_Model$DevicesPage,
+					_evancz$url_parser$UrlParser$s('Devices')),
 				_1: {
 					ctor: '::',
 					_0: A2(
 						_evancz$url_parser$UrlParser$map,
-						_michaelmosher$zenoss_web$Main_Model$EventPage,
-						A2(
-							_evancz$url_parser$UrlParser_ops['</>'],
-							_evancz$url_parser$UrlParser$s('Event'),
-							_evancz$url_parser$UrlParser$string)),
-					_1: {ctor: '[]'}
+						_michaelmosher$zenoss_web$Main_Model$EventsPage,
+						_evancz$url_parser$UrlParser$s('Events')),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_evancz$url_parser$UrlParser$map,
+							_michaelmosher$zenoss_web$Main_Model$EventPage,
+							A2(
+								_evancz$url_parser$UrlParser_ops['</>'],
+								_evancz$url_parser$UrlParser$s('Event'),
+								_evancz$url_parser$UrlParser$string)),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		}
@@ -13231,7 +13439,7 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 							_1: {ctor: '[]'}
 						}
 					});
-			default:
+			case 'NewDevices':
 				if (_p1._0.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
@@ -13260,6 +13468,12 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 						_1: _elm_lang$navigation$Navigation$newUrl('#Events')
 					};
 				}
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: _elm_lang$navigation$Navigation$newUrl('#Dashboard')
+				};
 		}
 	});
 var _michaelmosher$zenoss_web$Main$subscriptions = function (_p2) {

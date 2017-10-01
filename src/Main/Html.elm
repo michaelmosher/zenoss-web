@@ -57,7 +57,7 @@ footer page =
 
 dashboardButton: Html Msg
 dashboardButton =
-    div [style sharedButtonStyle] [text "Dashboard"]
+    div [style sharedButtonStyle, onClick ShowDashboard] [text "Dashboard"]
 
 
 eventsButton: Html Msg

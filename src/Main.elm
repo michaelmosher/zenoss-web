@@ -2,6 +2,7 @@ import Html exposing (Html, h2, text)
 import Navigation
 import UrlParser as Url exposing ((</>))
 
+import Dashboard.Html
 import LocalSettings
 import Login
 import Main.Html
@@ -50,6 +51,7 @@ route: Url.Parser (Page -> a) a
 route =
     Url.oneOf [
         Url.map EventsPage Url.top,
+        Url.map DashboardPage (Url.s "Dashboard"),
         Url.map DevicesPage (Url.s "Devices"),
         Url.map EventsPage (Url.s "Events"),
         Url.map EventPage (Url.s "Event" </> Url.string)
@@ -134,12 +136,17 @@ update msg model =
             in
                 ({model | events = [loginFailed]}, Navigation.newUrl "#Events")
 
+        ShowDashboard ->
+            (model, Navigation.newUrl "#Dashboard")
 
 view: Model -> Html Msg
 view model =
     case model.currentPage of
         Just LoginPage ->
             Login.pageView model
+
+        Just DashboardPage ->
+             Main.Html.overlay [Dashboard.Html.renderDashboard] model.currentPage
 
         Just DevicesPage ->
             Main.Html.overlay [Zenoss.devicesView model] model.currentPage

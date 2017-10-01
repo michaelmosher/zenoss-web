@@ -8,7 +8,7 @@ type alias Setting = {
     value: Maybe String
 }
 
-type Page = LoginPage | DevicesPage | EventsPage | EventPage String
+type Page = LoginPage | DashboardPage | DevicesPage | EventsPage | EventPage String
 
 type EventState = New | Acknowledged
 
@@ -63,3 +63,4 @@ type Msg =
     | UnacknowledgeResponse String (Result Http.Error (Bool))
     | RefreshDevices
     | NewDevices (Result Http.Error (List Device))
+    | ShowDashboard
