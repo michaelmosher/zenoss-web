@@ -86,6 +86,13 @@ devicesView model =
     ]
 
 
+-- function to handleDevicePage View
+deviceDetailView: Model -> String -> Html Msg
+deviceDetailView model uid =
+    div [] [
+        Zenoss.Html.renderDeviceDetails model.devices uid
+    ]
+
 -- function to handle EventsPage View
 eventsView: Model -> Html Msg
 eventsView model =

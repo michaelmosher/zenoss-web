@@ -8,7 +8,7 @@ type alias Setting = {
     value: Maybe String
 }
 
-type Page = LoginPage | DashboardPage | DevicesPage | EventsPage | EventPage String
+type Page = LoginPage | DashboardPage | DevicesPage | DevicePage String | EventsPage | EventPage String
 
 type EventState = New | Acknowledged
 

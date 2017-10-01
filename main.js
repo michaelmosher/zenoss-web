@@ -10683,6 +10683,9 @@ var _michaelmosher$zenoss_web$Main_Model$EventPage = function (a) {
 	return {ctor: 'EventPage', _0: a};
 };
 var _michaelmosher$zenoss_web$Main_Model$EventsPage = {ctor: 'EventsPage'};
+var _michaelmosher$zenoss_web$Main_Model$DevicePage = function (a) {
+	return {ctor: 'DevicePage', _0: a};
+};
 var _michaelmosher$zenoss_web$Main_Model$DevicesPage = {ctor: 'DevicesPage'};
 var _michaelmosher$zenoss_web$Main_Model$DashboardPage = {ctor: 'DashboardPage'};
 var _michaelmosher$zenoss_web$Main_Model$LoginPage = {ctor: 'LoginPage'};
@@ -12906,6 +12909,37 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderSimpleEvent = function (event) {
 			}
 		});
 };
+var _michaelmosher$zenoss_web$Zenoss_Html$renderDetailedDevice = function (device) {
+	var css = {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'padding', _1: '10px'},
+		_1: {ctor: '[]'}
+	};
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$style(css),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$eventDetailField, 'Name', device.name),
+			_1: {
+				ctor: '::',
+				_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$eventDetailField, 'Device Class', device.deviceClass),
+				_1: {
+					ctor: '::',
+					_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$eventDetailField, 'Production State', device.prodState),
+					_1: {
+						ctor: '::',
+						_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$eventDetailField, 'IP Address', device.ipAddress),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
 var _michaelmosher$zenoss_web$Zenoss_Html$renderEventDetails = F2(
 	function (events, eid) {
 		var event = _elm_lang$core$List$head(
@@ -12935,6 +12969,29 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEventList = function (events) {
 		{ctor: '[]'},
 		A2(_elm_lang$core$List$map, _michaelmosher$zenoss_web$Zenoss_Html$renderSimpleEvent, events));
 };
+var _michaelmosher$zenoss_web$Zenoss_Html$renderDeviceDetails = F2(
+	function (devices, name) {
+		var device = _elm_lang$core$List$head(
+			A2(
+				_elm_lang$core$List$filter,
+				function (d) {
+					return _elm_lang$core$Native_Utils.eq(d.name, name);
+				},
+				devices));
+		var _p8 = device;
+		if (_p8.ctor === 'Nothing') {
+			return A2(
+				_elm_lang$html$Html$p,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Error!'),
+					_1: {ctor: '[]'}
+				});
+		} else {
+			return _michaelmosher$zenoss_web$Zenoss_Html$renderDetailedDevice(_p8._0);
+		}
+	});
 var _michaelmosher$zenoss_web$Zenoss_Html$renderDeviceSummary = function (d) {
 	var css = {
 		ctor: '::',
@@ -13082,6 +13139,17 @@ var _michaelmosher$zenoss_web$Zenoss$eventsView = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
+var _michaelmosher$zenoss_web$Zenoss$deviceDetailView = F2(
+	function (model, uid) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$renderDeviceDetails, model.devices, uid),
+				_1: {ctor: '[]'}
+			});
+	});
 var _michaelmosher$zenoss_web$Zenoss$devicesView = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -13197,6 +13265,15 @@ var _michaelmosher$zenoss_web$Main$view = function (model) {
 						_1: {ctor: '[]'}
 					},
 					model.currentPage);
+			case 'DevicePage':
+				return A2(
+					_michaelmosher$zenoss_web$Main_Html$overlay,
+					{
+						ctor: '::',
+						_0: A2(_michaelmosher$zenoss_web$Zenoss$deviceDetailView, model, _p0._0._0),
+						_1: {ctor: '[]'}
+					},
+					model.currentPage);
 			case 'EventsPage':
 				return A2(
 					_michaelmosher$zenoss_web$Main_Html$overlay,
@@ -13247,18 +13324,28 @@ var _michaelmosher$zenoss_web$Main$route = _evancz$url_parser$UrlParser$oneOf(
 					ctor: '::',
 					_0: A2(
 						_evancz$url_parser$UrlParser$map,
-						_michaelmosher$zenoss_web$Main_Model$EventsPage,
-						_evancz$url_parser$UrlParser$s('Events')),
+						_michaelmosher$zenoss_web$Main_Model$DevicePage,
+						A2(
+							_evancz$url_parser$UrlParser_ops['</>'],
+							_evancz$url_parser$UrlParser$s('Device'),
+							_evancz$url_parser$UrlParser$string)),
 					_1: {
 						ctor: '::',
 						_0: A2(
 							_evancz$url_parser$UrlParser$map,
-							_michaelmosher$zenoss_web$Main_Model$EventPage,
-							A2(
-								_evancz$url_parser$UrlParser_ops['</>'],
-								_evancz$url_parser$UrlParser$s('Event'),
-								_evancz$url_parser$UrlParser$string)),
-						_1: {ctor: '[]'}
+							_michaelmosher$zenoss_web$Main_Model$EventsPage,
+							_evancz$url_parser$UrlParser$s('Events')),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_evancz$url_parser$UrlParser$map,
+								_michaelmosher$zenoss_web$Main_Model$EventPage,
+								A2(
+									_evancz$url_parser$UrlParser_ops['</>'],
+									_evancz$url_parser$UrlParser$s('Event'),
+									_evancz$url_parser$UrlParser$string)),
+							_1: {ctor: '[]'}
+						}
 					}
 				}
 			}

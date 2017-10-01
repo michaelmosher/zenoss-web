@@ -1,4 +1,4 @@
-module Zenoss.Html exposing (renderDeviceList, renderEventList, renderEventDetails)
+module Zenoss.Html exposing (renderDeviceList, renderDeviceDetails, renderEventList, renderEventDetails)
 
 import Char
 import Html exposing (Html, div, span, p, button, text)
@@ -36,6 +36,16 @@ renderDeviceSummary d =
             ]
         ]
 
+
+renderDeviceDetails: List Device -> String -> Html Msg
+renderDeviceDetails devices name =
+    let device = List.filter (\d -> d.name == name) devices |> List.head
+    in
+        case device of
+            Nothing -> p [] [text "Error!"]
+            Just d -> renderDetailedDevice d
+
+
 renderEventList: List Event -> Html Msg
 renderEventList events =
     div [] (List.map renderSimpleEvent events)
@@ -49,6 +59,18 @@ renderEventDetails events eid =
             Nothing -> p [] [text "Error!"]
             Just e -> renderDetailedEvent e
 
+
+renderDetailedDevice: Device -> Html Msg
+renderDetailedDevice device =
+    let css = [
+            ("padding", "10px")
+        ]
+    in div [style css] [
+        eventDetailField "Name" device.name,
+        eventDetailField "Device Class" device.deviceClass,
+        eventDetailField "Production State" device.prodState,
+        eventDetailField "IP Address" device.ipAddress
+    ]
 
 renderSimpleEvent: Event -> Html Msg
 renderSimpleEvent event =

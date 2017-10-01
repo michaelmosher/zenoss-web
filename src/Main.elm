@@ -53,6 +53,7 @@ route =
         Url.map EventsPage Url.top,
         Url.map DashboardPage (Url.s "Dashboard"),
         Url.map DevicesPage (Url.s "Devices"),
+        Url.map DevicePage (Url.s "Device" </> Url.string),
         Url.map EventsPage (Url.s "Events"),
         Url.map EventPage (Url.s "Event" </> Url.string)
     ]
@@ -77,7 +78,7 @@ update msg model =
             ({model | password = p}, Cmd.none)
 
         LoginMsg ->
-          model ! [
+            model ! [
                 Zenoss.refreshEvents model,
                 Navigation.newUrl "#Events",
                 LocalSettings.setSetting {key = "Zhostname", value = Just model.hostname},
@@ -150,6 +151,9 @@ view model =
 
         Just DevicesPage ->
             Main.Html.overlay [Zenoss.devicesView model] model.currentPage
+
+        Just (DevicePage uid) ->
+            Main.Html.overlay [Zenoss.deviceDetailView model uid] model.currentPage
 
         Just EventsPage ->
             Main.Html.overlay [Zenoss.eventsView model] model.currentPage
