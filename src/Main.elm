@@ -107,7 +107,10 @@ update msg model =
             Zenoss.acknowledgeEvent model eid
 
         AcknowledgeResponse eid (Ok e) ->
-            (model, Cmd.none)
+            case e of
+                True -> (model, Cmd.none)
+                False -> ({model | events = Zenoss.changeEventState model eid}, Cmd.none)
+
 
         AcknowledgeResponse eid (Err e) ->
             ({model | events = Zenoss.changeEventState model eid}, Cmd.none)
@@ -116,7 +119,9 @@ update msg model =
             Zenoss.unacknowledgeEvent model eid
 
         UnacknowledgeResponse eid (Ok e) ->
-            (model, Cmd.none)
+            case e of
+                True -> (model, Cmd.none)
+                False -> ({model | events = Zenoss.changeEventState model eid}, Cmd.none)
 
         UnacknowledgeResponse eid (Err e) ->
             ({model | events = Zenoss.changeEventState model eid}, Cmd.none)

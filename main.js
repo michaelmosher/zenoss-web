@@ -13398,7 +13398,20 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 				return A2(_michaelmosher$zenoss_web$Zenoss$acknowledgeEvent, model, _p1._0);
 			case 'AcknowledgeResponse':
 				if (_p1._1.ctor === 'Ok') {
-					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					var _p2 = _p1._1._0;
+					if (_p2 === true) {
+						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					} else {
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									events: A2(_michaelmosher$zenoss_web$Zenoss$changeEventState, model, _p1._0)
+								}),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					}
 				} else {
 					return {
 						ctor: '_Tuple2',
@@ -13414,7 +13427,20 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 				return A2(_michaelmosher$zenoss_web$Zenoss$unacknowledgeEvent, model, _p1._0);
 			case 'UnacknowledgeResponse':
 				if (_p1._1.ctor === 'Ok') {
-					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					var _p3 = _p1._1._0;
+					if (_p3 === true) {
+						return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+					} else {
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									events: A2(_michaelmosher$zenoss_web$Zenoss$changeEventState, model, _p1._0)
+								}),
+							_1: _elm_lang$core$Platform_Cmd$none
+						};
+					}
 				} else {
 					return {
 						ctor: '_Tuple2',
@@ -13476,7 +13502,7 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 				};
 		}
 	});
-var _michaelmosher$zenoss_web$Main$subscriptions = function (_p2) {
+var _michaelmosher$zenoss_web$Main$subscriptions = function (_p4) {
 	return _michaelmosher$zenoss_web$LocalSettings$newSetting(_michaelmosher$zenoss_web$Main_Model$NewSetting);
 };
 var _michaelmosher$zenoss_web$Main$init = F2(
@@ -13492,20 +13518,20 @@ var _michaelmosher$zenoss_web$Main$init = F2(
 			{ctor: '[]'},
 			{ctor: '[]'});
 		var initialAction = function () {
-			var _p3 = initialPage;
-			_v2_2:
+			var _p5 = initialPage;
+			_v4_2:
 			do {
-				if (_p3.ctor === 'Just') {
-					switch (_p3._0.ctor) {
+				if (_p5.ctor === 'Just') {
+					switch (_p5._0.ctor) {
 						case 'LoginPage':
 							return _michaelmosher$zenoss_web$LocalSettings$loadInitialSettings;
 						case 'DevicesPage':
 							return _michaelmosher$zenoss_web$Zenoss$refreshDevices(model);
 						default:
-							break _v2_2;
+							break _v4_2;
 					}
 				} else {
-					break _v2_2;
+					break _v4_2;
 				}
 			} while(false);
 			return _michaelmosher$zenoss_web$Zenoss$refreshEvents(model);
