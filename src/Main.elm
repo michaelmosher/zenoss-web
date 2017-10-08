@@ -107,8 +107,8 @@ update msg model =
         AcknowledgeEvent eid ->
             Zenoss.acknowledgeEvent model eid
 
-        AcknowledgeResponse eid (Ok e) ->
-            case e of
+        AcknowledgeResponse eid (Ok success) ->
+            case success of
                 True -> (model, Cmd.none)
                 False -> ({model | events = Zenoss.changeEventState model eid}, Cmd.none)
 
@@ -119,8 +119,8 @@ update msg model =
         UnacknowledgeEvent eid ->
             Zenoss.unacknowledgeEvent model eid
 
-        UnacknowledgeResponse eid (Ok e) ->
-            case e of
+        UnacknowledgeResponse eid (Ok success) ->
+            case success of
                 True -> (model, Cmd.none)
                 False -> ({model | events = Zenoss.changeEventState model eid}, Cmd.none)
 
@@ -149,7 +149,9 @@ update msg model =
             (model, Zenoss.updateDevice model uid ps)
 
         UpdateDeviceResponse uid ps (Ok success) ->
-            ({model | devices = Zenoss.changeDeviceState model uid ps}, Cmd.none)
+            case success of
+                True -> ({model | devices = Zenoss.changeDeviceState model uid ps}, Cmd.none)
+                False -> (model, Cmd.none)
 
         UpdateDeviceResponse uid ps (Err e) ->
             (model, Cmd.none)
