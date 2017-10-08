@@ -66,5 +66,5 @@ type Msg =
     | RefreshDevices
     | NewDevices (Result Http.Error (List Device))
     | ShowDashboard
-    | UpdateDevice ProdState String
-    | UpdateDeviceResponse String (Result Http.Error (Bool))
+    | UpdateDevice String ProdState
+    | UpdateDeviceResponse String ProdState (Result Http.Error (Bool))

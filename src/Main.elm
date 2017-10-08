@@ -140,6 +140,15 @@ update msg model =
         ShowDashboard ->
             (model, Navigation.newUrl "#Dashboard")
 
+        UpdateDevice uid ps ->
+            (model, Zenoss.updateDevice model uid ps)
+
+        UpdateDeviceResponse uid ps (Ok success) ->
+            ({model | devices = Zenoss.changeDeviceState model uid ps}, Cmd.none)
+
+        UpdateDeviceResponse uid ps (Err e) ->
+            (model, Cmd.none)
+
 view: Model -> Html Msg
 view model =
     case model.currentPage of

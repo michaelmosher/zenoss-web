@@ -10693,6 +10693,14 @@ var _michaelmosher$zenoss_web$Main_Model$DashboardPage = {ctor: 'DashboardPage'}
 var _michaelmosher$zenoss_web$Main_Model$LoginPage = {ctor: 'LoginPage'};
 var _michaelmosher$zenoss_web$Main_Model$Acknowledged = {ctor: 'Acknowledged'};
 var _michaelmosher$zenoss_web$Main_Model$New = {ctor: 'New'};
+var _michaelmosher$zenoss_web$Main_Model$UpdateDeviceResponse = F3(
+	function (a, b, c) {
+		return {ctor: 'UpdateDeviceResponse', _0: a, _1: b, _2: c};
+	});
+var _michaelmosher$zenoss_web$Main_Model$UpdateDevice = F2(
+	function (a, b) {
+		return {ctor: 'UpdateDevice', _0: a, _1: b};
+	});
 var _michaelmosher$zenoss_web$Main_Model$ShowDashboard = {ctor: 'ShowDashboard'};
 var _michaelmosher$zenoss_web$Main_Model$NewDevices = function (a) {
 	return {ctor: 'NewDevices', _0: a};
@@ -11964,6 +11972,10 @@ var _michaelmosher$zenoss_web$Zenoss_Http_Devices$deviceDecoder = A3(
 								'uid',
 								_elm_lang$core$Json_Decode$string,
 								_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_michaelmosher$zenoss_web$Main_Model$Device)))))))));
+var _michaelmosher$zenoss_web$Zenoss_Http_Devices$setInfoDecoder = A2(
+	_elm_lang$core$Json_Decode$field,
+	'result',
+	A2(_elm_lang$core$Json_Decode$field, 'success', _elm_lang$core$Json_Decode$bool));
 var _michaelmosher$zenoss_web$Zenoss_Http_Devices$getDecoder = A2(
 	_elm_lang$core$Json_Decode$field,
 	'result',
@@ -11971,6 +11983,34 @@ var _michaelmosher$zenoss_web$Zenoss_Http_Devices$getDecoder = A2(
 		_elm_lang$core$Json_Decode$field,
 		'devices',
 		_elm_lang$core$Json_Decode$list(_michaelmosher$zenoss_web$Zenoss_Http_Devices$deviceDecoder)));
+var _michaelmosher$zenoss_web$Zenoss_Http_Devices$setInfoData = F2(
+	function (uid, ps) {
+		var _p1 = ps;
+		var numericValue = _p1._1;
+		return _elm_lang$core$Json_Encode$list(
+			{
+				ctor: '::',
+				_0: _elm_lang$core$Json_Encode$object(
+					{
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'uid',
+							_1: _elm_lang$core$Json_Encode$string(uid)
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'productionState',
+								_1: _elm_lang$core$Json_Encode$int(numericValue)
+							},
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {ctor: '[]'}
+			});
+	});
 var _michaelmosher$zenoss_web$Zenoss_Http_Devices$getData = _elm_lang$core$Json_Encode$list(
 	{
 		ctor: '::',
@@ -12029,6 +12069,14 @@ var _michaelmosher$zenoss_web$Zenoss_Http_Devices$getData = _elm_lang$core$Json_
 	});
 var _michaelmosher$zenoss_web$Zenoss_Http_Devices$deviceRequestBody = _michaelmosher$zenoss_web$Zenoss_Http_Shared$apiRequestBody('DeviceRouter');
 var _michaelmosher$zenoss_web$Zenoss_Http_Devices$deviceRequest = _michaelmosher$zenoss_web$Zenoss_Http_Shared$apiRequest('device_router');
+var _michaelmosher$zenoss_web$Zenoss_Http_Devices$setInfo = F3(
+	function (auth, uid, ps) {
+		var body = A2(
+			_michaelmosher$zenoss_web$Zenoss_Http_Devices$deviceRequestBody,
+			'setInfo',
+			A2(_michaelmosher$zenoss_web$Zenoss_Http_Devices$setInfoData, uid, ps));
+		return A3(_michaelmosher$zenoss_web$Zenoss_Http_Devices$deviceRequest, auth, body, _michaelmosher$zenoss_web$Zenoss_Http_Devices$setInfoDecoder);
+	});
 var _michaelmosher$zenoss_web$Zenoss_Http_Devices$get = function (auth) {
 	var body = A2(_michaelmosher$zenoss_web$Zenoss_Http_Devices$deviceRequestBody, 'getDevices', _michaelmosher$zenoss_web$Zenoss_Http_Devices$getData);
 	return A3(_michaelmosher$zenoss_web$Zenoss_Http_Devices$deviceRequest, auth, body, _michaelmosher$zenoss_web$Zenoss_Http_Devices$getDecoder);
@@ -13199,6 +13247,17 @@ var _michaelmosher$zenoss_web$Zenoss$devicesView = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
+var _michaelmosher$zenoss_web$Zenoss$changeDeviceState = F3(
+	function (model, uid, ps) {
+		return A2(
+			_elm_lang$core$List$map,
+			function (device) {
+				return _elm_lang$core$Native_Utils.eq(device.uid, uid) ? _elm_lang$core$Native_Utils.update(
+					device,
+					{prodState: ps}) : device;
+			},
+			model.devices);
+	});
 var _michaelmosher$zenoss_web$Zenoss$changeEventState = F2(
 	function (model, eventId) {
 		return A2(
@@ -13273,6 +13332,16 @@ var _michaelmosher$zenoss_web$Zenoss$refreshEvents = function (model) {
 	var responseHandler = _michaelmosher$zenoss_web$Main_Model$NewEvents;
 	return A2(_elm_lang$http$Http$send, responseHandler, request);
 };
+var _michaelmosher$zenoss_web$Zenoss$updateDevice = F3(
+	function (model, uid, ps) {
+		var request = A3(
+			_michaelmosher$zenoss_web$Zenoss_Http_Devices$setInfo,
+			{hostname: model.hostname, username: model.username, password: model.password},
+			uid,
+			ps);
+		var responseHandler = A2(_michaelmosher$zenoss_web$Main_Model$UpdateDeviceResponse, uid, ps);
+		return A2(_elm_lang$http$Http$send, responseHandler, request);
+	});
 var _michaelmosher$zenoss_web$Zenoss$refreshDevices = function (model) {
 	var request = _michaelmosher$zenoss_web$Zenoss_Http_Devices$get(
 		{hostname: model.hostname, username: model.username, password: model.password});
@@ -13594,12 +13663,32 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 						_1: _elm_lang$navigation$Navigation$newUrl('#Events')
 					};
 				}
-			default:
+			case 'ShowDashboard':
 				return {
 					ctor: '_Tuple2',
 					_0: model,
 					_1: _elm_lang$navigation$Navigation$newUrl('#Dashboard')
 				};
+			case 'UpdateDevice':
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: A3(_michaelmosher$zenoss_web$Zenoss$updateDevice, model, _p1._0, _p1._1)
+				};
+			default:
+				if (_p1._2.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								devices: A3(_michaelmosher$zenoss_web$Zenoss$changeDeviceState, model, _p1._0, _p1._1)
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
 		}
 	});
 var _michaelmosher$zenoss_web$Main$subscriptions = function (_p2) {

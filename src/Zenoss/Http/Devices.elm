@@ -1,4 +1,4 @@
-module Zenoss.Http.Devices exposing (get)
+module Zenoss.Http.Devices exposing (get, setInfo)
 
 import Http
 import Json.Decode as Decode
@@ -12,6 +12,13 @@ get auth =
     let body = deviceRequestBody "getDevices" getData
     in
         deviceRequest auth body getDecoder
+
+
+setInfo: Auth -> String -> ProdState -> Http.Request Bool
+setInfo auth uid ps =
+    let body = setInfoData uid ps |> deviceRequestBody "setInfo"
+    in
+        deviceRequest auth body setInfoDecoder
 
 
 deviceRequest: Auth -> Http.Body -> Decode.Decoder a -> Http.Request a
@@ -42,12 +49,30 @@ getData =
     ]
 
 
+setInfoData: String -> ProdState -> Json.Value
+setInfoData uid ps =
+    let (_, numericValue) = ps
+    in 
+        Json.list [
+            Json.object [
+                ("uid", Json.string uid),
+                ("productionState", Json.int numericValue)
+            ]
+        ]
+
 getDecoder: Decode.Decoder (List Device)
 getDecoder =
     Decode.field "result"
         (Decode.field "devices"
             (Decode.list deviceDecoder)
         )
+
+
+setInfoDecoder: Decode.Decoder Bool
+setInfoDecoder =
+    Decode.field "result"
+        (Decode.field "success" Decode.bool)
+
 
 deviceDecoder: Decode.Decoder Device
 deviceDecoder =

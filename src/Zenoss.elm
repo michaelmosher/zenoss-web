@@ -4,7 +4,7 @@ import Html exposing (Html, div, h2, text)
 import Http
 import Navigation
 
-import Main.Model exposing (Model, Msg, Event, EventState(..), ProdState)
+import Main.Model exposing (Model, Msg, Device, Event, EventState(..), ProdState)
 import Zenoss.Http.Devices as ZenossDevices
 import Zenoss.Http.Events as ZenossEvents
 import Zenoss.Html
@@ -18,20 +18,21 @@ refreshDevices model =
             username = model.username,
             password = model.password
         }
-    in Http.send responseHandler request
+    in
+        Http.send responseHandler request
 
 
 -- function to handle UpdateDevice Msg
-updateDevice: ProdState -> String -> Model -> (Model, Cmd Msg)
-updateDevice ps uid model =
-    let responseHandler = Main.Model.UpdateDeviceResponse
+updateDevice: Model -> String -> ProdState -> Cmd Msg
+updateDevice model uid ps =
+    let responseHandler = Main.Model.UpdateDeviceResponse  uid ps
         request = ZenossDevices.setInfo {
             hostname = model.hostname,
             username = model.username,
             password = model.password
         } uid ps
     in
-        (model, Cmd.none)
+        Http.send responseHandler request
 
 -- function to handle RefreshEvents Msg
 refreshEvents: Model -> Cmd Msg
@@ -79,6 +80,7 @@ unacknowledgeEvent model eventId =
             Http.send responseHandler request
         ]
 
+
 changeEventState: Model -> String -> List Event
 changeEventState model eventId =
     List.map (\event ->
@@ -89,6 +91,15 @@ changeEventState model eventId =
                     Acknowledged -> {event | eventState = New}
             else event
     ) model.events
+
+
+changeDeviceState: Model -> String -> ProdState -> List Device
+changeDeviceState model uid ps =
+    List.map (\device ->
+        if device.uid == uid
+            then {device | prodState = ps}
+            else device
+    ) model.devices
 
 
 -- function to handle DevicesPage View
