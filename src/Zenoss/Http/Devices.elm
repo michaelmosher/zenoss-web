@@ -2,7 +2,7 @@ module Zenoss.Http.Devices exposing (get, setInfo)
 
 import Http
 import Json.Decode as Decode
-import Json.Decode.Pipeline exposing (decode, optional, required, requiredAt)
+import Json.Decode.Pipeline exposing (decode, hardcoded, optional, required, requiredAt)
 import Json.Encode as Json
 import Main.Model exposing (Device, ProdState)
 import Zenoss.Http.Shared exposing (Auth, apiRequest, apiRequestBody)
@@ -85,7 +85,7 @@ deviceDecoder =
         |> requiredAt ["events", "critical", "count"] Decode.int
         |> requiredAt ["events", "error", "count"] Decode.int
         |> requiredAt ["events", "warning", "count"] Decode.int
-
+        |> hardcoded Nothing
 
 prodStateDecoder: Decode.Decoder ProdState
 prodStateDecoder =

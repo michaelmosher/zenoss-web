@@ -1,9 +1,9 @@
 module Zenoss.Html exposing (renderDeviceList, renderDeviceDetails, renderEventList, renderEventDetails)
 
 import Char
-import Html exposing (Html, div, span, p, button, text)
-import Html.Attributes exposing (class, style)
-import Html.Events exposing (onClick)
+import Html exposing (Html, div, span, p, button, select, option, text)
+import Html.Attributes exposing (class, disabled, style, selected)
+import Html.Events exposing (onClick, onInput)
 import Svg
 import Svg.Attributes exposing (points, fill, cx, cy, r)
 import Main.Model exposing (Device, Event, EventState(..), Msg(..), ProdState)
@@ -27,7 +27,7 @@ renderDeviceSummary d =
             ("padding", "5px")
         ]
     in
-        div [style css] [
+        div [style css, onClick (DeviceDetails d.name)] [
             div [style [("display", "flex")]] [
                 d.name |> renderEventDeviceName,
                 d.prodState |> renderEventProdState
@@ -67,11 +67,22 @@ renderDetailedDevice device =
     let css = [
             ("padding", "10px")
         ]
+        buttonDisabled = case device.pendingProdState of
+            Nothing -> True
+            Just _ -> False
+        buttonAction = case device.pendingProdState of
+            Nothing -> RefreshDevices
+            Just ps -> UpdateDevice device.uid ps
+
     in div [style css] [
         eventDetailField "Name" device.name,
         eventDetailField "Device Class" device.deviceClass,
-        eventDetailField "Production State" (Tuple.first device.prodState),
-        eventDetailField "IP Address" device.ipAddress
+        eventDetailField "IP Address" device.ipAddress,
+        div [] [
+            text "Production State",
+            Tuple.first device.prodState |> renderProdStateSelector device.uid
+        ],
+        button [disabled buttonDisabled, onClick buttonAction] [text "Update!"]
     ]
 
 renderSimpleEvent: Event -> Html Msg
@@ -265,6 +276,18 @@ eventDetailField key value =
             ]
         ] [text value]
     ]
+
+
+renderProdStateSelector: String -> String -> Html.Html Msg
+renderProdStateSelector uid deviceState =
+    let options = ["Production", "Pre-Production", "Test", "Maintenance"]
+            |> List.map (\state ->
+                if state == deviceState
+                then option [selected True] [text state]
+                else option [] [text state]
+            )
+    in
+        select [onInput (PrepareDeviceUpdate uid)] options
 
 
 breakLongWords: String -> List (Html.Html a)

@@ -10673,9 +10673,9 @@ var _michaelmosher$zenoss_web$Main_Model$Event = function (a) {
 		};
 	};
 };
-var _michaelmosher$zenoss_web$Main_Model$Device = F8(
-	function (a, b, c, d, e, f, g, h) {
-		return {uid: a, name: b, deviceClass: c, prodState: d, ipAddress: e, critEvents: f, errEvents: g, warnEvents: h};
+var _michaelmosher$zenoss_web$Main_Model$Device = F9(
+	function (a, b, c, d, e, f, g, h, i) {
+		return {uid: a, name: b, deviceClass: c, prodState: d, ipAddress: e, critEvents: f, errEvents: g, warnEvents: h, pendingProdState: i};
 	});
 var _michaelmosher$zenoss_web$Main_Model$Model = F6(
 	function (a, b, c, d, e, f) {
@@ -10701,6 +10701,13 @@ var _michaelmosher$zenoss_web$Main_Model$UpdateDevice = F2(
 	function (a, b) {
 		return {ctor: 'UpdateDevice', _0: a, _1: b};
 	});
+var _michaelmosher$zenoss_web$Main_Model$PrepareDeviceUpdate = F2(
+	function (a, b) {
+		return {ctor: 'PrepareDeviceUpdate', _0: a, _1: b};
+	});
+var _michaelmosher$zenoss_web$Main_Model$DeviceDetails = function (a) {
+	return {ctor: 'DeviceDetails', _0: a};
+};
 var _michaelmosher$zenoss_web$Main_Model$ShowDashboard = {ctor: 'ShowDashboard'};
 var _michaelmosher$zenoss_web$Main_Model$NewDevices = function (a) {
 	return {ctor: 'NewDevices', _0: a};
@@ -11894,22 +11901,9 @@ var _michaelmosher$zenoss_web$Zenoss_Http_Devices$prodStateDecoder = A2(
 		}
 	},
 	_elm_lang$core$Json_Decode$int);
-var _michaelmosher$zenoss_web$Zenoss_Http_Devices$deviceDecoder = A3(
-	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$requiredAt,
-	{
-		ctor: '::',
-		_0: 'events',
-		_1: {
-			ctor: '::',
-			_0: 'warning',
-			_1: {
-				ctor: '::',
-				_0: 'count',
-				_1: {ctor: '[]'}
-			}
-		}
-	},
-	_elm_lang$core$Json_Decode$int,
+var _michaelmosher$zenoss_web$Zenoss_Http_Devices$deviceDecoder = A2(
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$hardcoded,
+	_elm_lang$core$Maybe$Nothing,
 	A3(
 		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$requiredAt,
 		{
@@ -11917,7 +11911,7 @@ var _michaelmosher$zenoss_web$Zenoss_Http_Devices$deviceDecoder = A3(
 			_0: 'events',
 			_1: {
 				ctor: '::',
-				_0: 'error',
+				_0: 'warning',
 				_1: {
 					ctor: '::',
 					_0: 'count',
@@ -11933,7 +11927,7 @@ var _michaelmosher$zenoss_web$Zenoss_Http_Devices$deviceDecoder = A3(
 				_0: 'events',
 				_1: {
 					ctor: '::',
-					_0: 'critical',
+					_0: 'error',
 					_1: {
 						ctor: '::',
 						_0: 'count',
@@ -11942,36 +11936,52 @@ var _michaelmosher$zenoss_web$Zenoss_Http_Devices$deviceDecoder = A3(
 				}
 			},
 			_elm_lang$core$Json_Decode$int,
-			A4(
-				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
-				'ipAddressString',
-				_elm_lang$core$Json_Decode$string,
-				'unknown',
-				A3(
-					_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-					'productionState',
-					_michaelmosher$zenoss_web$Zenoss_Http_Devices$prodStateDecoder,
-					A3(
-						_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$requiredAt,
-						{
+			A3(
+				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$requiredAt,
+				{
+					ctor: '::',
+					_0: 'events',
+					_1: {
+						ctor: '::',
+						_0: 'critical',
+						_1: {
 							ctor: '::',
-							_0: 'deviceClass',
-							_1: {
-								ctor: '::',
-								_0: 'name',
-								_1: {ctor: '[]'}
-							}
-						},
-						_elm_lang$core$Json_Decode$string,
+							_0: 'count',
+							_1: {ctor: '[]'}
+						}
+					}
+				},
+				_elm_lang$core$Json_Decode$int,
+				A4(
+					_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
+					'ipAddressString',
+					_elm_lang$core$Json_Decode$string,
+					'unknown',
+					A3(
+						_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+						'productionState',
+						_michaelmosher$zenoss_web$Zenoss_Http_Devices$prodStateDecoder,
 						A3(
-							_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-							'name',
+							_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$requiredAt,
+							{
+								ctor: '::',
+								_0: 'deviceClass',
+								_1: {
+									ctor: '::',
+									_0: 'name',
+									_1: {ctor: '[]'}
+								}
+							},
 							_elm_lang$core$Json_Decode$string,
 							A3(
 								_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-								'uid',
+								'name',
 								_elm_lang$core$Json_Decode$string,
-								_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_michaelmosher$zenoss_web$Main_Model$Device)))))))));
+								A3(
+									_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+									'uid',
+									_elm_lang$core$Json_Decode$string,
+									_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_michaelmosher$zenoss_web$Main_Model$Device))))))))));
 var _michaelmosher$zenoss_web$Zenoss_Http_Devices$setInfoDecoder = A2(
 	_elm_lang$core$Json_Decode$field,
 	'result',
@@ -12395,6 +12405,58 @@ var _michaelmosher$zenoss_web$Zenoss_Html$breakLongWords = function (summary) {
 		},
 		_elm_lang$core$String$words(summary));
 };
+var _michaelmosher$zenoss_web$Zenoss_Html$renderProdStateSelector = F2(
+	function (uid, deviceState) {
+		var options = A2(
+			_elm_lang$core$List$map,
+			function (state) {
+				return _elm_lang$core$Native_Utils.eq(state, deviceState) ? A2(
+					_elm_lang$html$Html$option,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$selected(true),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(state),
+						_1: {ctor: '[]'}
+					}) : A2(
+					_elm_lang$html$Html$option,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(state),
+						_1: {ctor: '[]'}
+					});
+			},
+			{
+				ctor: '::',
+				_0: 'Production',
+				_1: {
+					ctor: '::',
+					_0: 'Pre-Production',
+					_1: {
+						ctor: '::',
+						_0: 'Test',
+						_1: {
+							ctor: '::',
+							_0: 'Maintenance',
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			});
+		return A2(
+			_elm_lang$html$Html$select,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onInput(
+					_michaelmosher$zenoss_web$Main_Model$PrepareDeviceUpdate(uid)),
+				_1: {ctor: '[]'}
+			},
+			options);
+	});
 var _michaelmosher$zenoss_web$Zenoss_Html$eventDetailField = F2(
 	function (key, value) {
 		return A2(
@@ -12992,6 +13054,22 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderSimpleEvent = function (event) {
 		});
 };
 var _michaelmosher$zenoss_web$Zenoss_Html$renderDetailedDevice = function (device) {
+	var buttonAction = function () {
+		var _p7 = device.pendingProdState;
+		if (_p7.ctor === 'Nothing') {
+			return _michaelmosher$zenoss_web$Main_Model$RefreshDevices;
+		} else {
+			return A2(_michaelmosher$zenoss_web$Main_Model$UpdateDevice, device.uid, _p7._0);
+		}
+	}();
+	var buttonDisabled = function () {
+		var _p8 = device.pendingProdState;
+		if (_p8.ctor === 'Nothing') {
+			return true;
+		} else {
+			return false;
+		}
+	}();
 	var css = {
 		ctor: '::',
 		_0: {ctor: '_Tuple2', _0: 'padding', _1: '10px'},
@@ -13012,14 +13090,44 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderDetailedDevice = function (devic
 				_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$eventDetailField, 'Device Class', device.deviceClass),
 				_1: {
 					ctor: '::',
-					_0: A2(
-						_michaelmosher$zenoss_web$Zenoss_Html$eventDetailField,
-						'Production State',
-						_elm_lang$core$Tuple$first(device.prodState)),
+					_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$eventDetailField, 'IP Address', device.ipAddress),
 					_1: {
 						ctor: '::',
-						_0: A2(_michaelmosher$zenoss_web$Zenoss_Html$eventDetailField, 'IP Address', device.ipAddress),
-						_1: {ctor: '[]'}
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Production State'),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_michaelmosher$zenoss_web$Zenoss_Html$renderProdStateSelector,
+										device.uid,
+										_elm_lang$core$Tuple$first(device.prodState)),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$button,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$disabled(buttonDisabled),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onClick(buttonAction),
+										_1: {ctor: '[]'}
+									}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Update!'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
 					}
 				}
 			}
@@ -13034,8 +13142,8 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEventDetails = F2(
 					return _elm_lang$core$Native_Utils.eq(e.id, eid);
 				},
 				events));
-		var _p7 = event;
-		if (_p7.ctor === 'Nothing') {
+		var _p9 = event;
+		if (_p9.ctor === 'Nothing') {
 			return A2(
 				_elm_lang$html$Html$p,
 				{ctor: '[]'},
@@ -13045,7 +13153,7 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderEventDetails = F2(
 					_1: {ctor: '[]'}
 				});
 		} else {
-			return _michaelmosher$zenoss_web$Zenoss_Html$renderDetailedEvent(_p7._0);
+			return _michaelmosher$zenoss_web$Zenoss_Html$renderDetailedEvent(_p9._0);
 		}
 	});
 var _michaelmosher$zenoss_web$Zenoss_Html$renderEventList = function (events) {
@@ -13063,8 +13171,8 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderDeviceDetails = F2(
 					return _elm_lang$core$Native_Utils.eq(d.name, name);
 				},
 				devices));
-		var _p8 = device;
-		if (_p8.ctor === 'Nothing') {
+		var _p10 = device;
+		if (_p10.ctor === 'Nothing') {
 			return A2(
 				_elm_lang$html$Html$p,
 				{ctor: '[]'},
@@ -13074,7 +13182,7 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderDeviceDetails = F2(
 					_1: {ctor: '[]'}
 				});
 		} else {
-			return _michaelmosher$zenoss_web$Zenoss_Html$renderDetailedDevice(_p8._0);
+			return _michaelmosher$zenoss_web$Zenoss_Html$renderDetailedDevice(_p10._0);
 		}
 	});
 var _michaelmosher$zenoss_web$Zenoss_Html$renderDeviceSummary = function (d) {
@@ -13092,7 +13200,12 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderDeviceSummary = function (d) {
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html_Attributes$style(css),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(
+					_michaelmosher$zenoss_web$Main_Model$DeviceDetails(d.name)),
+				_1: {ctor: '[]'}
+			}
 		},
 		{
 			ctor: '::',
@@ -13173,7 +13286,7 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderDeviceSummary = function (d) {
 		});
 };
 var _michaelmosher$zenoss_web$Zenoss_Html$renderDeviceList = function (devices) {
-	var _p9 = A2(
+	var _p11 = A2(
 		_elm_lang$core$List$partition,
 		function (d) {
 			return _elm_lang$core$Native_Utils.cmp(
@@ -13188,8 +13301,8 @@ var _michaelmosher$zenoss_web$Zenoss_Html$renderDeviceList = function (devices) 
 					'Decommissioned');
 			},
 			devices));
-	var alertingDevices = _p9._0;
-	var healthyDevices = _p9._1;
+	var alertingDevices = _p11._0;
+	var healthyDevices = _p11._1;
 	var sortedDevices = A2(_elm_lang$core$Basics_ops['++'], alertingDevices, healthyDevices);
 	return A2(
 		_elm_lang$html$Html$div,
@@ -13254,7 +13367,34 @@ var _michaelmosher$zenoss_web$Zenoss$changeDeviceState = F3(
 			function (device) {
 				return _elm_lang$core$Native_Utils.eq(device.uid, uid) ? _elm_lang$core$Native_Utils.update(
 					device,
-					{prodState: ps}) : device;
+					{prodState: ps, pendingProdState: _elm_lang$core$Maybe$Nothing}) : device;
+			},
+			model.devices);
+	});
+var _michaelmosher$zenoss_web$Zenoss$prepareDeviceUpdate = F3(
+	function (model, uid, prodStateString) {
+		var prodStateInt = function () {
+			var _p0 = prodStateString;
+			switch (_p0) {
+				case 'Production':
+					return 1000;
+				case 'Pre-Production':
+					return 500;
+				case 'Test':
+					return 400;
+				default:
+					return 300;
+			}
+		}();
+		var ps = {ctor: '_Tuple2', _0: prodStateString, _1: prodStateInt};
+		return A2(
+			_elm_lang$core$List$map,
+			function (device) {
+				return _elm_lang$core$Native_Utils.eq(device.uid, uid) ? _elm_lang$core$Native_Utils.update(
+					device,
+					{
+						pendingProdState: _elm_lang$core$Maybe$Just(ps)
+					}) : device;
 			},
 			model.devices);
 	});
@@ -13264,8 +13404,8 @@ var _michaelmosher$zenoss_web$Zenoss$changeEventState = F2(
 			_elm_lang$core$List$map,
 			function (event) {
 				if (_elm_lang$core$Native_Utils.eq(event.id, eventId)) {
-					var _p0 = event.eventState;
-					if (_p0.ctor === 'New') {
+					var _p1 = event.eventState;
+					if (_p1.ctor === 'New') {
 						return _elm_lang$core$Native_Utils.update(
 							event,
 							{eventState: _michaelmosher$zenoss_web$Main_Model$Acknowledged});
@@ -13695,12 +13835,36 @@ var _michaelmosher$zenoss_web$Main$update = F2(
 					_0: model,
 					_1: _elm_lang$navigation$Navigation$newUrl('#Dashboard')
 				};
-			case 'UpdateDevice':
+			case 'DeviceDetails':
 				return {
 					ctor: '_Tuple2',
 					_0: model,
-					_1: A3(_michaelmosher$zenoss_web$Zenoss$updateDevice, model, _p1._0, _p1._1)
+					_1: _elm_lang$navigation$Navigation$newUrl(
+						A2(_elm_lang$core$Basics_ops['++'], '#Device/', _p1._0))
 				};
+			case 'PrepareDeviceUpdate':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							devices: A3(_michaelmosher$zenoss_web$Zenoss$prepareDeviceUpdate, model, _p1._0, _p1._1)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'UpdateDevice':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					{
+						ctor: '::',
+						_0: _elm_lang$navigation$Navigation$newUrl('#Devices'),
+						_1: {
+							ctor: '::',
+							_0: A3(_michaelmosher$zenoss_web$Zenoss$updateDevice, model, _p1._0, _p1._1),
+							_1: {ctor: '[]'}
+						}
+					});
 			default:
 				if (_p1._2.ctor === 'Ok') {
 					var _p4 = _p1._2._0;

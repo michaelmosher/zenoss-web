@@ -145,8 +145,17 @@ update msg model =
         ShowDashboard ->
             (model, Navigation.newUrl "#Dashboard")
 
+        DeviceDetails name ->
+            (model, "#Device/" ++ name |> Navigation.newUrl)
+        
+        PrepareDeviceUpdate uid prodStateString ->
+            ({model | devices = Zenoss.prepareDeviceUpdate model uid prodStateString}, Cmd.none)
+
         UpdateDevice uid ps ->
-            (model, Zenoss.updateDevice model uid ps)
+            model ! [
+                Navigation.newUrl "#Devices",
+                Zenoss.updateDevice model uid ps
+            ]
 
         UpdateDeviceResponse uid ps (Ok success) ->
             case success of

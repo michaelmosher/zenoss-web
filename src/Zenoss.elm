@@ -93,11 +93,26 @@ changeEventState model eventId =
     ) model.events
 
 
+prepareDeviceUpdate: Model -> String -> String -> List Device
+prepareDeviceUpdate model uid prodStateString =
+    let prodStateInt = case prodStateString of
+            "Production" -> 1000
+            "Pre-Production" -> 500
+            "Test" -> 400
+            _ -> 300
+        ps = (prodStateString, prodStateInt)
+    in
+        List.map (\device ->
+            if device.uid == uid
+                then {device | pendingProdState = Just ps}
+                else device
+        ) model.devices
+
 changeDeviceState: Model -> String -> ProdState -> List Device
 changeDeviceState model uid ps =
     List.map (\device ->
         if device.uid == uid
-            then {device | prodState = ps}
+            then {device | prodState = ps, pendingProdState = Nothing}
             else device
     ) model.devices
 

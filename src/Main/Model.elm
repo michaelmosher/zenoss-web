@@ -37,7 +37,8 @@ type alias Device = {
     ipAddress: String,
     critEvents: Int,
     errEvents: Int,
-    warnEvents: Int
+    warnEvents: Int,
+    pendingProdState: Maybe ProdState
 }
 
 type alias Model = {
@@ -66,5 +67,7 @@ type Msg =
     | RefreshDevices
     | NewDevices (Result Http.Error (List Device))
     | ShowDashboard
+    | DeviceDetails String
+    | PrepareDeviceUpdate String String
     | UpdateDevice String ProdState
     | UpdateDeviceResponse String ProdState (Result Http.Error (Bool))
